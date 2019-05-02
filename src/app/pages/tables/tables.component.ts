@@ -1,8 +1,15 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 
 @Component({
-  selector: 'ngx-tables',
-  template: `<router-outlet></router-outlet>`,
+  selector: 'app-tables',
+  templateUrl: './tables.component.html',
+  styleUrls: ['./tables.component.scss']
 })
-export class TablesComponent {
+export class TablesComponent implements OnInit {
+
+  constructor() { }
+
+  ngOnInit() {
+  }
+
 }

@@ -1,97 +1,65 @@
-import {Component, OnDestroy} from '@angular/core';
-import { NbThemeService } from '@nebular/theme';
-import { takeWhile } from 'rxjs/operators' ;
-import { SolarData } from '../../@core/data/solar';
+import { Component, OnInit } from '@angular/core';
+import Chart from 'chart.js';
 
-interface CardSettings {
-  title: string;
-  iconClass: string;
-  type: string;
-}
+// core components
+import {
+  chartOptions,
+  parseOptions,
+  chartExample1,
+  chartExample2
+} from "../../variables/charts";
 
 @Component({
-  selector: 'ngx-dashboard',
-  styleUrls: ['./dashboard.component.scss'],
+  selector: 'app-dashboard',
   templateUrl: './dashboard.component.html',
+  styleUrls: ['./dashboard.component.scss']
 })
-export class DashboardComponent implements OnDestroy {
+export class DashboardComponent implements OnInit {
 
-  private alive = true;
+  public datasets: any;
+  public data: any;
+  public salesChart;
+  public clicked: boolean = true;
+  public clicked1: boolean = false;
 
-  solarValue: number;
-  lightCard: CardSettings = {
-    title: 'Light',
-    iconClass: 'nb-lightbulb',
-    type: 'primary',
-  };
-  rollerShadesCard: CardSettings = {
-    title: 'Roller Shades',
-    iconClass: 'nb-roller-shades',
-    type: 'success',
-  };
-  wirelessAudioCard: CardSettings = {
-    title: 'Wireless Audio',
-    iconClass: 'nb-audio',
-    type: 'info',
-  };
-  coffeeMakerCard: CardSettings = {
-    title: 'Coffee Maker',
-    iconClass: 'nb-coffee-maker',
-    type: 'warning',
-  };
+  constructor() { }
 
-  statusCards: string;
+  ngOnInit() {
 
-  commonStatusCardsSet: CardSettings[] = [
-    this.lightCard,
-    this.rollerShadesCard,
-    this.wirelessAudioCard,
-    this.coffeeMakerCard,
-  ];
+    this.datasets = [
+      [0, 20, 10, 30, 15, 40, 20, 60, 60],
+      [0, 20, 5, 25, 10, 30, 15, 40, 40]
+    ];
+    this.data = this.datasets[0];
 
-  statusCardsByThemes: {
-    default: CardSettings[];
-    cosmic: CardSettings[];
-    corporate: CardSettings[];
-  } = {
-    default: this.commonStatusCardsSet,
-    cosmic: this.commonStatusCardsSet,
-    corporate: [
-      {
-        ...this.lightCard,
-        type: 'warning',
-      },
-      {
-        ...this.rollerShadesCard,
-        type: 'primary',
-      },
-      {
-        ...this.wirelessAudioCard,
-        type: 'danger',
-      },
-      {
-        ...this.coffeeMakerCard,
-        type: 'secondary',
-      },
-    ],
-  };
 
-  constructor(private themeService: NbThemeService,
-              private solarService: SolarData) {
-    this.themeService.getJsTheme()
-      .pipe(takeWhile(() => this.alive))
-      .subscribe(theme => {
-        this.statusCards = this.statusCardsByThemes[theme.name];
+    var chartOrders = document.getElementById('chart-orders');
+
+    parseOptions(Chart, chartOptions());
+
+
+    var ordersChart = new Chart(chartOrders, {
+      type: 'bar',
+      options: chartExample2.options,
+      data: chartExample2.data
     });
 
-    this.solarService.getSolarData()
-      .pipe(takeWhile(() => this.alive))
-      .subscribe((data) => {
-        this.solarValue = data;
-      });
+    var chartSales = document.getElementById('chart-sales');
+
+    this.salesChart = new Chart(chartSales, {
+			type: 'line',
+			options: chartExample1.options,
+			data: chartExample1.data
+		});
   }
 
-  ngOnDestroy() {
-    this.alive = false;
+
+
+
+
+  public updateOptions() {
+    this.salesChart.data.datasets[0].data = this.data;
+    this.salesChart.update();
   }
+
 }
