@@ -1,4 +1,4 @@
-# [Argon Dashboard Angular](https://demos.creative-tim.com/argon-dashboard-angular/?ref=ada-github-readme) [![Tweet](https://img.shields.io/twitter/url/http/shields.io.svg?style=social&logo=twitter)](https://twitter.com/home?status=Argon%20Dashboard%20is%20a%20Free%20Bootstrap%20and%20Angular%20Dashboard%20made%20using%20angular-cli%20%E2%9D%A4%EF%B8%8F%0Ahttps%3A//demos.creative-tim.com/argon-dashboard-angular%20%23angular%20%23angular-cli%20%23argon%20%23argondesign%20%23angulardashboard%20%23argonangular%20%23angulardesign%20%23bootstrap%20%23design%20%23uikit%20%23freebie%20%20via%20%40CreativeTim)
+# VCare frontend
 
 ![version](https://img.shields.io/badge/version-1.0.0-blue.svg) ![license](https://img.shields.io/badge/license-MIT-blue.svg) [![GitHub issues](https://img.shields.io/github/issues/dungvv/vcare-front.svg)](https://github.com/dungvv/vcare-front/issues/) [![GitHub issues-closed](https://img.shields.io/github/issues-closed/dungvv/vcare-front.svg)](https://https://github.com/dungvv/vcare-front/issues?q=is%3Aissue+is%3Aclosed) [![Build Status](https://travis-ci.org/dungvv/vcare-front.svg?branch=master)](https://travis-ci.org/dungvv/vcare-front)
 
