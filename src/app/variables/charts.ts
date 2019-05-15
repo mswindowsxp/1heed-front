@@ -41,7 +41,8 @@ Chart.elements.Rectangle.prototype.draw = function() {
     borderWidth = borderWidth > barSize ? barSize : borderWidth;
     const halfStroke = borderWidth / 2;
     // Adjust borderWidth when bar top position is near vm.base(zero).
-    const borderLeft = left + (borderSkipped !== 'left' ? halfStroke * signX : 0);
+    const borderLeft =
+      left + (borderSkipped !== 'left' ? halfStroke * signX : 0);
     const borderRight =
       right + (borderSkipped !== 'right' ? -halfStroke * signX : 0);
     const borderTop = top + (borderSkipped !== 'top' ? halfStroke * signY : 0);
@@ -157,6 +158,7 @@ const colors = {
   transparent: 'transparent'
 };
 
+/* tslint:disable */
 export function chartOptions() {
   // Options
   const options = {
@@ -270,6 +272,8 @@ export function chartOptions() {
 
   return options;
 }
+
+/* tslint:enable */
 
 export const parseOptions = (parent, options) => {
   for (const item in options) {
