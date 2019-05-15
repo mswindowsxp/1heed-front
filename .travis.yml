@@ -4,16 +4,15 @@ sudo: false
 dist: trusty
 
 node_js:
-  - "8"
-  - "9"
   - "10"
 
 branches:
   only:
     - master
-    - demo
+    - develop
 
 addons:
+  ssh_known_hosts: 173.212.251.237
   apt:
     sources:
       - ubuntu-toolchain-r-test
@@ -36,3 +35,4 @@ script:
 
 git:
   depth: 1
+
