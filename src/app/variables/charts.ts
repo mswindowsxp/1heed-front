@@ -126,7 +126,8 @@ Chart.elements.Rectangle.prototype.draw = function() {
   }
 };
 
-const mode = 'light'; // (themeMode) ? themeMode : 'light';
+let mode = ''; // (themeMode) ? themeMode : 'light';
+mode = 'light';
 const fonts = {
   base: 'Open Sans'
 };
