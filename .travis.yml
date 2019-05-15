@@ -4,7 +4,7 @@ sudo: false
 dist: trusty
 
 node_js:
-  - "10"
+  - '10'
 
 branches:
   only:
@@ -13,11 +13,6 @@ branches:
 
 addons:
   ssh_known_hosts: 173.212.251.237
-  apt:
-    sources:
-      - ubuntu-toolchain-r-test
-    packages:
-      - g++-4.8
 
 before_install:
   - npm i -g npm@latest
@@ -33,4 +28,3 @@ script:
 
 git:
   depth: 1
-
