@@ -1,12 +1,13 @@
 <nav class="navbar navbar-vertical navbar-expand-md navbar-light bg-white" id="sidenav-main">
   <div class="container-fluid">
     <!-- Toggler -->
-    <button class="navbar-toggler" type="button" (click)="isCollapsed = !isCollapsed" aria-controls="sidenav-collapse-main">
+    <button class="navbar-toggler" type="button" (click)="isCollapsed = !isCollapsed"
+      aria-controls="sidenav-collapse-main">
       <span class="navbar-toggler-icon"></span>
     </button>
     <!-- Brand -->
     <a class="navbar-brand pt-0" routerLinkActive="active" [routerLink]="['/dashboard']">
-      <img src="./assets/img/brand/red.png" class="navbar-brand-img" alt="..." />
+      <img src="./assets/img/brand/V-art.png" class="navbar-brand-img" alt="..." />
     </a>
     <!-- User -->
     <ul class="nav align-items-center d-md-none">
@@ -15,10 +16,11 @@
           <i class="ni ni-bell-55"></i>
         </a>
         <div class="dropdown-menu-arrow dropdown-menu-right" ngbDropdownMenu>
-          <a class="dropdown-item" href="javascript:void(0)">Action</a>
-          <a class="dropdown-item" href="javascript:void(0)">Another action</a>
+          <a class="dropdown-item" href="javascript:void(0)">Hội Thoại</a>
+          <a class="dropdown-item" href="javascript:void(0)">Bài Viết</a>
+          <a class="dropdown-item" href="javascript:void(0)">Thống Kê</a>
           <div class="dropdown-divider"></div>
-          <a class="dropdown-item" href="javascript:void(0)">Something else here</a>
+          <a class="dropdown-item" href="javascript:void(0)">Cài Đặt</a>
         </div>
       </li>
       <li class="nav-item" ngbDropdown placement="bottom-right">
@@ -78,7 +80,8 @@
       <!-- Form -->
       <form class="mt-4 mb-3 d-md-none">
         <div class="input-group input-group-rounded input-group-merge">
-          <input type="search" class="form-control form-control-rounded form-control-prepended" placeholder="Search" aria-label="Search" />
+          <input type="search" class="form-control form-control-rounded form-control-prepended" placeholder="Search"
+            aria-label="Search" />
           <div class="input-group-prepend">
             <div class="input-group-text">
               <span class="fa fa-search"></span>
@@ -89,9 +92,9 @@
       <!-- Navigation -->
       <ul class="navbar-nav">
         <li *ngFor="let menuItem of menuItems" class="{{ menuItem.class }} nav-item">
-          <a [routerLink]="[menuItem.path]" class="btn btn-lg active sidebar-btn" role="button" aria-pressed="true" [ngbTooltip]="menuItem.title" placement="right"
-            ><i class="ni {{ menuItem.icon }}"></i
-          ></a>
+          <a routerLinkActive="active" [routerLink]="['menuItem.path']" class="btn btn-lg active sidebar-btn"
+            role="button" aria-pressed="true" [ngbTooltip]="menuItem.title" placement="right" data-container="body"><i
+              class="ni {{ menuItem.icon }}"></i></a>
         </li>
       </ul>
     </div>

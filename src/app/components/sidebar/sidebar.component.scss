@@ -2,6 +2,13 @@
   font-size: 25px;
 }
 
-.navbar-vertical {
-  width: 64px;
+.bs-tooltip-right {
+  display: inline-block;
+  overflow: hidden;
+  position: absolute;
+  z-index: 1;
+}
+
+.navbar .nav-item {
+  text-align: center !important;
 }
