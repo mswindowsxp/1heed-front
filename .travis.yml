@@ -24,6 +24,6 @@ script:
   - echo -e "Host 173.212.251.237\n\tStrictHostKeyChecking no\n" >> ~/.ssh/config
   - ssh-add ./deploy_key
   - ssh -i ./deploy_key root@173.212.251.237 pwd
-  - scp -i ./deploy_key -rf dist/* root@173.212.251.237:/var/www/vcare-front
+  - scp -i ./deploy_key -r -v dist/ root@173.212.251.237:/var/www/vcare-front/dist
 git:
   depth: 1
