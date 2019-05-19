@@ -23,6 +23,6 @@ script:
   - chmod 600 ./deploy_key
   - echo -e "Host 173.212.251.237\n\tStrictHostKeyChecking no\n" >> ~/.ssh/config
   - ssh-add ./deploy_key
-  - ssh -i ./deploy_key root@138.68.163.126 pwd
+  - ssh -i ./deploy_key root@173.212.251.237 pwd
 git:
   depth: 1
