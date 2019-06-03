@@ -10,8 +10,8 @@
  * Do not edit the class manually.
  */
 
-
-export interface AccessToken { 
-    token?: string;
-    userId?: string;
+export interface AccessToken {
+    accessToken: string;
+    userId: string;
+    expires: string;
 }

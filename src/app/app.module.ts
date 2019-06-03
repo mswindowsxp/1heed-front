@@ -20,6 +20,7 @@ import { AppStoreModule } from 'app/store/store.module';
 import {ApiModule, BASE_PATH, Configuration, ConfigurationParameters} from './http';
 import {environment} from '../environments/environment';
 import {AuthGuard} from './shared/guard/auth.guard';
+import {ShareModule} from './shared/share.module';
 
 const appRoutes: Routes = [
     {
@@ -87,7 +88,8 @@ const appRoutes: Routes = [
         // App modules
         LayoutModule,
         AppStoreModule,
-        ApiModule.forRoot(apiConfigFactory)
+        ApiModule.forRoot(apiConfigFactory),
+        ShareModule
     ],
     providers: [{provide: BASE_PATH, useValue: environment.apiBasePath}],
     bootstrap: [AppComponent]

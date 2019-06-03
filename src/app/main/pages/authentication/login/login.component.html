@@ -1,21 +1,25 @@
 <div id="login" fxLayout="column">
-
-    <div id="login-form-wrapper" fxLayout="column" fxLayoutAlign="center center">
-
-        <div id="login-form" [@animate]="{value:'*',params:{duration:'300ms',y:'100px'}}">
-
+    <div
+        id="login-form-wrapper"
+        fxLayout="column"
+        fxLayoutAlign="center center"
+    >
+        <div
+            id="login-form"
+            [@animate]="{
+                value: '*',
+                params: { duration: '300ms', y: '100px' }
+            }"
+        >
             <div class="logo">
-                <img src="assets/images/logos/fuse.svg">
+                <img src="assets/images/logos/fuse.svg" />
             </div>
 
             <div class="title">Chào mừng đến với 1HEED</div>
             <div>Vui lòng đăng nhập để sử dụng dịch vụ</div>
-            <button mat-raised-button class="facebook">
+            <button mat-raised-button class="facebook" (click)="fbLogin()">
                 Đăng nhập với FB!
             </button>
-
         </div>
-
     </div>
-
 </div>

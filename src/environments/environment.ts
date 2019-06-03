@@ -4,8 +4,8 @@
 
 export const environment = {
     production: false,
-    hmr       : false,
-    apiBasePath: ''
+    hmr: false,
+    apiBasePath: 'https://1heed.com'
 };
 
 /*
