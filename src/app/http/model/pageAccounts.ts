@@ -12,15 +12,9 @@
 import { Picture } from './picture';
 
 
-export interface UserInfo { 
+export interface PageAccounts { 
+    accessToken?: string;
     name?: string;
     id?: string;
-    userType?: UserInfo.UserTypeEnum;
     picture?: Picture;
-}
-export namespace UserInfo {
-    export type UserTypeEnum = 'FACEBOOK';
-    export const UserTypeEnum = {
-        FACEBOOK: 'FACEBOOK' as UserTypeEnum
-    };
 }

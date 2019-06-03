@@ -9,18 +9,9 @@
  * https://github.com/swagger-api/swagger-codegen.git
  * Do not edit the class manually.
  */
-import { Picture } from './picture';
+import { PictureData } from './pictureData';
 
 
-export interface UserInfo { 
-    name?: string;
-    id?: string;
-    userType?: UserInfo.UserTypeEnum;
-    picture?: Picture;
-}
-export namespace UserInfo {
-    export type UserTypeEnum = 'FACEBOOK';
-    export const UserTypeEnum = {
-        FACEBOOK: 'FACEBOOK' as UserTypeEnum
-    };
+export interface Picture { 
+    data?: PictureData;
 }

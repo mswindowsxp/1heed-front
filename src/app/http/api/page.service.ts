@@ -18,15 +18,14 @@ import { CustomHttpUrlEncodingCodec }                        from '../encoder';
 
 import { Observable }                                        from 'rxjs/Observable';
 
-import { AccessTokenPayload } from '../model/accessTokenPayload';
-import { LoginResponse } from '../model/loginResponse';
+import { PageAccounts } from '../model/pageAccounts';
 
 import { BASE_PATH, COLLECTION_FORMATS }                     from '../variables';
 import { Configuration }                                     from '../configuration';
 
 
 @Injectable()
-export class AuthenticationService {
+export class PageService {
 
     protected basePath = 'https://virtserver.swaggerhub.com/dungvv/1heed/1.0.0';
     public defaultHeaders = new HttpHeaders();
@@ -59,21 +58,24 @@ export class AuthenticationService {
 
     /**
      * 
-     * Login using facebook account
-     * @param authorizationCode pass authorization code to login
+     * get list of pages user administer
+     * @param authorization 
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public apiLoginFacebookPost(authorizationCode: AccessTokenPayload, observe?: 'body', reportProgress?: boolean): Observable<LoginResponse>;
-    public apiLoginFacebookPost(authorizationCode: AccessTokenPayload, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<LoginResponse>>;
-    public apiLoginFacebookPost(authorizationCode: AccessTokenPayload, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<LoginResponse>>;
-    public apiLoginFacebookPost(authorizationCode: AccessTokenPayload, observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
+    public apiFacebookPagesGet(authorization: string, observe?: 'body', reportProgress?: boolean): Observable<Array<PageAccounts>>;
+    public apiFacebookPagesGet(authorization: string, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<Array<PageAccounts>>>;
+    public apiFacebookPagesGet(authorization: string, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<Array<PageAccounts>>>;
+    public apiFacebookPagesGet(authorization: string, observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
 
-        if (authorizationCode === null || authorizationCode === undefined) {
-            throw new Error('Required parameter authorizationCode was null or undefined when calling apiLoginFacebookPost.');
+        if (authorization === null || authorization === undefined) {
+            throw new Error('Required parameter authorization was null or undefined when calling apiFacebookPagesGet.');
         }
 
         let headers = this.defaultHeaders;
+        if (authorization !== undefined && authorization !== null) {
+            headers = headers.set('Authorization', String(authorization));
+        }
 
         // to determine the Accept header
         let httpHeaderAccepts: string[] = [
@@ -87,13 +89,8 @@ export class AuthenticationService {
         // to determine the Content-Type header
         const consumes: string[] = [
         ];
-        const httpContentTypeSelected: string | undefined = this.configuration.selectHeaderContentType(consumes);
-        if (httpContentTypeSelected != undefined) {
-            headers = headers.set('Content-Type', httpContentTypeSelected);
-        }
 
-        return this.httpClient.post<LoginResponse>(`${this.basePath}/api/login/facebook`,
-            authorizationCode,
+        return this.httpClient.get<Array<PageAccounts>>(`${this.basePath}/api/facebook/pages`,
             {
                 withCredentials: this.configuration.withCredentials,
                 headers: headers,

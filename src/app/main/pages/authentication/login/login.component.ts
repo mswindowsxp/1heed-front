@@ -1,8 +1,10 @@
 import { Component, NgZone, OnInit, ViewEncapsulation } from '@angular/core';
-import { FormBuilder } from '@angular/forms';
 import { Router } from '@angular/router';
 import { fuseAnimations } from '@fuse/animations';
 import { FuseConfigService } from '@fuse/services/config.service';
+import { PageService } from 'app/http/api/page.service';
+import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
 
 import { AuthenticationService } from '../../../../http';
 import { AuthenticateService } from '../../../../shared/services/authenticate.service';
@@ -29,11 +31,11 @@ export class LoginComponent implements OnInit {
      */
     constructor(
         private _fuseConfigService: FuseConfigService,
-        private _formBuilder: FormBuilder,
         private readonly authService: AuthenticateService,
         private readonly router: Router,
         private ngZone: NgZone,
-        private readonly authenticateService: AuthenticationService
+        private readonly authenticateService: AuthenticationService,
+        private readonly pageService: PageService
     ) {
         // Configure the layout
         this._fuseConfigService.config = {
@@ -92,7 +94,7 @@ export class LoginComponent implements OnInit {
         FB.login(response => {
             this.ngZone.run(() => {
                 if (response.authResponse) {
-                    this.getUserDataData(response);
+                    this.prepareData(response);
                     this.authService.login();
                 } else {
                     this.isLoginFailure = true;
@@ -101,22 +103,25 @@ export class LoginComponent implements OnInit {
         });
     }
 
-    getUserDataData(response: any): void {
-        this.authenticateService
-            .apiOauth2LoginFacebookPost({
-                accessToken: response.authResponse.accessToken,
-                userId: response.authResponse.userID,
-                expires: response.authResponse.expiresIn
+    getUserDataData(response: any): Observable<any> {
+        return this.authenticateService.apiLoginFacebookPost({
+            accessToken: response.authResponse.accessToken,
+            userId: response.authResponse.userID,
+            expires: response.authResponse.expiresIn
+        });
+    }
+
+    getPagesManage(response: any): Observable<any> {
+        return this.getUserDataData(response).pipe(
+            map(data => {
+                return this.pageService.apiFacebookPagesGet(data.authString);
             })
-            .subscribe(
-                data => {
-                    debugger;
-                    this.isLogin = true;
-                    // this.router.navigate(['/dashboard']);
-                },
-                error => {
-                    this.isLogin = false;
-                }
-            );
+        );
+    }
+
+    prepareData(response: any) {
+        this.getPagesManage(response).subscribe(data => {
+            console.log(data);
+        });
     }
 }
