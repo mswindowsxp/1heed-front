@@ -17,16 +17,16 @@ import { FakeDbService } from 'app/fake-db/fake-db.service';
 import { fuseConfig } from 'app/fuse-config';
 import { LayoutModule } from 'app/layout/layout.module';
 import { AppStoreModule } from 'app/store/store.module';
-import {ApiModule, BASE_PATH, Configuration} from './http';
+import {ApiModule, BASE_PATH, Configuration, ConfigurationParameters} from './http';
 import {environment} from '../environments/environment';
 
 const appRoutes: Routes = [
     {
         path: 'apps',
-        loadChildren: './main/apps/apps.module#AppsModule'
+        loadChildren: './main/apps/apps.module#AppsModule',
     },
     {
-        path: 'pages',
+        path: '',
         loadChildren: './main/pages/pages.module#PagesModule'
     },
     {
@@ -45,7 +45,7 @@ const appRoutes: Routes = [
     },
     {
         path: '**',
-        redirectTo: 'apps/dashboards/analytics'
+        redirectTo: 'auth/login'
     }
 ];
 
@@ -80,9 +80,17 @@ const appRoutes: Routes = [
 
         // App modules
         LayoutModule,
-        AppStoreModule
+        AppStoreModule,
+        ApiModule.forRoot(apiConfigFactory)
     ],
     providers: [{provide: BASE_PATH, useValue: environment.apiBasePath}],
     bootstrap: [AppComponent]
 })
 export class AppModule {}
+
+export function apiConfigFactory(): Configuration {
+    const params: ConfigurationParameters = {
+        basePath: environment.apiBasePath
+    };
+    return new Configuration(params);
+}
