@@ -1,57 +1,58 @@
-import { NgModule } from '@angular/core';
-import { BrowserModule } from '@angular/platform-browser';
-import { HttpClientModule } from '@angular/common/http';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { RouterModule, Routes } from '@angular/router';
-import { MatMomentDateModule } from '@angular/material-moment-adapter';
-import { MatButtonModule, MatIconModule } from '@angular/material';
-import { InMemoryWebApiModule } from 'angular-in-memory-web-api';
-import { TranslateModule } from '@ngx-translate/core';
 import 'hammerjs';
 
+import { HttpClientModule } from '@angular/common/http';
+import { NgModule } from '@angular/core';
+import { MatButtonModule, MatIconModule } from '@angular/material';
+import { MatMomentDateModule } from '@angular/material-moment-adapter';
+import { BrowserModule } from '@angular/platform-browser';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { RouterModule, Routes } from '@angular/router';
+import { FuseProgressBarModule, FuseSidebarModule, FuseThemeOptionsModule } from '@fuse/components';
 import { FuseModule } from '@fuse/fuse.module';
 import { FuseSharedModule } from '@fuse/shared.module';
-import { FuseProgressBarModule, FuseSidebarModule, FuseThemeOptionsModule } from '@fuse/components';
-
-import { fuseConfig } from 'app/fuse-config';
-
-import { FakeDbService } from 'app/fake-db/fake-db.service';
+import { TranslateModule } from '@ngx-translate/core';
+import { InMemoryWebApiModule } from 'angular-in-memory-web-api';
 import { AppComponent } from 'app/app.component';
-import { AppStoreModule } from 'app/store/store.module';
+import { FakeDbService } from 'app/fake-db/fake-db.service';
+import { fuseConfig } from 'app/fuse-config';
 import { LayoutModule } from 'app/layout/layout.module';
+import { AppStoreModule } from 'app/store/store.module';
+import {ApiModule, BASE_PATH, Configuration} from './http';
+import {environment} from '../environments/environment';
 
 const appRoutes: Routes = [
     {
-        path        : 'apps',
+        path: 'apps',
         loadChildren: './main/apps/apps.module#AppsModule'
     },
     {
-        path        : 'pages',
+        path: 'pages',
         loadChildren: './main/pages/pages.module#PagesModule'
     },
     {
-        path        : 'ui',
+        path: 'ui',
         loadChildren: './main/ui/ui.module#UIModule'
     },
     {
-        path        : 'documentation',
-        loadChildren: './main/documentation/documentation.module#DocumentationModule'
+        path: 'documentation',
+        loadChildren:
+            './main/documentation/documentation.module#DocumentationModule'
     },
     {
-        path        : 'angular-material-elements',
-        loadChildren: './main/angular-material-elements/angular-material-elements.module#AngularMaterialElementsModule'
+        path: 'angular-material-elements',
+        loadChildren:
+            './main/angular-material-elements/angular-material-elements.module#AngularMaterialElementsModule'
     },
     {
-        path      : '**',
+        path: '**',
         redirectTo: 'apps/dashboards/analytics'
     }
 ];
 
+
 @NgModule({
-    declarations: [
-        AppComponent
-    ],
-    imports     : [
+    declarations: [AppComponent],
+    imports: [
         BrowserModule,
         BrowserAnimationsModule,
         HttpClientModule,
@@ -59,7 +60,7 @@ const appRoutes: Routes = [
 
         TranslateModule.forRoot(),
         InMemoryWebApiModule.forRoot(FakeDbService, {
-            delay             : 0,
+            delay: 0,
             passThruUnknownUrl: true
         }),
 
@@ -81,10 +82,7 @@ const appRoutes: Routes = [
         LayoutModule,
         AppStoreModule
     ],
-    bootstrap   : [
-        AppComponent
-    ]
+    providers: [{provide: BASE_PATH, useValue: environment.apiBasePath}],
+    bootstrap: [AppComponent]
 })
-export class AppModule
-{
-}
+export class AppModule {}
