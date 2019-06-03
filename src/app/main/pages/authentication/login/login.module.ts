@@ -8,7 +8,7 @@ import { LoginComponent } from 'app/main/pages/authentication/login/login.compon
 
 const routes = [
     {
-        path     : 'auth/login',
+        path     : '',
         component: LoginComponent
     }
 ];
@@ -19,7 +19,6 @@ const routes = [
     ],
     imports     : [
         RouterModule.forChild(routes),
-
         MatButtonModule,
         MatCheckboxModule,
         MatFormFieldModule,

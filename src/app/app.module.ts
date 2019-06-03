@@ -19,14 +19,16 @@ import { LayoutModule } from 'app/layout/layout.module';
 import { AppStoreModule } from 'app/store/store.module';
 import {ApiModule, BASE_PATH, Configuration, ConfigurationParameters} from './http';
 import {environment} from '../environments/environment';
+import {AuthGuard} from './shared/guard/auth.guard';
 
 const appRoutes: Routes = [
     {
         path: 'apps',
         loadChildren: './main/apps/apps.module#AppsModule',
+        canActivate: [AuthGuard]
     },
     {
-        path: '',
+        path: 'pages',
         loadChildren: './main/pages/pages.module#PagesModule'
     },
     {
@@ -44,8 +46,12 @@ const appRoutes: Routes = [
             './main/angular-material-elements/angular-material-elements.module#AngularMaterialElementsModule'
     },
     {
+        path: 'login',
+        loadChildren: './main/pages/authentication/login/login.module#LoginModule'
+    },
+    {
         path: '**',
-        redirectTo: 'auth/login'
+        redirectTo: 'apps/dashboards/analytics',
     }
 ];
 
