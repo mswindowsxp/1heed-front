@@ -3,11 +3,10 @@ import { Router } from '@angular/router';
 import { fuseAnimations } from '@fuse/animations';
 import { FuseConfigService } from '@fuse/services/config.service';
 import { PageService } from 'app/http/api/page.service';
-import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { forkJoin, Observable } from 'rxjs';
 
-import { AuthenticationService } from '../../../../http';
-import { AuthenticateService } from '../../../../shared/services/authenticate.service';
+import { AuthenticationService } from '../../http';
+import { AuthenticateService } from '../../shared/services/authenticate.service';
 
 declare var FB: any;
 @Component({
@@ -112,16 +111,18 @@ export class LoginComponent implements OnInit {
     }
 
     getPagesManage(response: any): Observable<any> {
-        return this.getUserDataData(response).pipe(
-            map(data => {
-                return this.pageService.apiFacebookPagesGet(data.authString);
-            })
+        return forkJoin(
+            this.getUserDataData(response),
+            this.pageService.apiFacebookPagesGet(
+                response.authResponse.accessToken
+            )
         );
     }
 
-    prepareData(response: any) {
+    prepareData(response: any): void {
         this.getPagesManage(response).subscribe(data => {
-            console.log(data);
+            this.authService.isLoggedIn = true;
+            this.router.navigate(['apps/dashboards/analytics']);
         });
     }
 }

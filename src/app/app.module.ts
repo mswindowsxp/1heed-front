@@ -2,25 +2,26 @@ import 'hammerjs';
 
 import { HttpClientModule } from '@angular/common/http';
 import { NgModule } from '@angular/core';
-import { MatButtonModule, MatIconModule } from '@angular/material';
-import { MatMomentDateModule } from '@angular/material-moment-adapter';
+import { MatIconModule } from '@angular/material';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { RouterModule, Routes } from '@angular/router';
-import { FuseProgressBarModule, FuseSidebarModule, FuseThemeOptionsModule } from '@fuse/components';
-import { FuseModule } from '@fuse/fuse.module';
-import { FuseSharedModule } from '@fuse/shared.module';
+import { FuseProgressBarModule } from '@fuse/components';
 import { TranslateModule } from '@ngx-translate/core';
 import { InMemoryWebApiModule } from 'angular-in-memory-web-api';
 import { AppComponent } from 'app/app.component';
-import { FakeDbService } from 'app/fake-db/fake-db.service';
 import { fuseConfig } from 'app/fuse-config';
 import { LayoutModule } from 'app/layout/layout.module';
 import { AppStoreModule } from 'app/store/store.module';
-import {ApiModule, BASE_PATH, Configuration, ConfigurationParameters} from './http';
-import {environment} from '../environments/environment';
-import {AuthGuard} from './shared/guard/auth.guard';
-import {ShareModule} from './shared/share.module';
+
+import { environment } from '../environments/environment';
+import { FuseSidebarModule } from './../@fuse/components/sidebar/sidebar.module';
+import { FuseThemeOptionsModule } from './../@fuse/components/theme-options/theme-options.module';
+import { FuseModule } from './../@fuse/fuse.module';
+import { FakeDbService } from './fake-db/fake-db.service';
+import { ApiModule, BASE_PATH, Configuration, ConfigurationParameters } from './http';
+import { AuthGuard } from './shared/guard/auth.guard';
+import { ShareModule } from './shared/share.module';
 
 const appRoutes: Routes = [
     {
@@ -30,7 +31,8 @@ const appRoutes: Routes = [
     },
     {
         path: 'pages',
-        loadChildren: './main/pages/pages.module#PagesModule'
+        loadChildren: './main/pages/pages.module#PagesModule',
+        canActivate: [AuthGuard]
     },
     {
         path: 'ui',
@@ -48,14 +50,13 @@ const appRoutes: Routes = [
     },
     {
         path: 'login',
-        loadChildren: './main/pages/authentication/login/login.module#LoginModule'
+        loadChildren: './modules/login/login.module#LoginModule'
     },
     {
         path: '**',
-        redirectTo: 'apps/dashboards/analytics',
+        redirectTo: 'apps/dashboards/analytics'
     }
 ];
-
 
 @NgModule({
     declarations: [AppComponent],
@@ -64,34 +65,29 @@ const appRoutes: Routes = [
         BrowserAnimationsModule,
         HttpClientModule,
         RouterModule.forRoot(appRoutes),
-
         TranslateModule.forRoot(),
-        InMemoryWebApiModule.forRoot(FakeDbService, {
-            delay: 0,
-            passThruUnknownUrl: true
-        }),
-
-        // Material moment date module
-        MatMomentDateModule,
-
-        // Material
-        MatButtonModule,
-        MatIconModule,
-
-        // Fuse modules
-        FuseModule.forRoot(fuseConfig),
-        FuseProgressBarModule,
-        FuseSharedModule,
-        FuseSidebarModule,
-        FuseThemeOptionsModule,
-
-        // App modules
         LayoutModule,
         AppStoreModule,
         ApiModule.forRoot(apiConfigFactory),
-        ShareModule
+        ShareModule,
+        MatIconModule,
+        FuseProgressBarModule,
+        FuseModule.forRoot(fuseConfig),
+        FuseSidebarModule,
+        FuseThemeOptionsModule,
+        InMemoryWebApiModule.forRoot(FakeDbService, {
+            delay: 0,
+            passThruUnknownUrl: true
+        })
+        // // Material moment date module
+        // MatMomentDateModule,
+        // // Material
+        // MatButtonModule,
+        // // Fuse modules
+        // FuseSharedModule,
+        // App modules
     ],
-    providers: [{provide: BASE_PATH, useValue: environment.apiBasePath}],
+    providers: [{ provide: BASE_PATH, useValue: environment.apiBasePath }],
     bootstrap: [AppComponent]
 })
 export class AppModule {}

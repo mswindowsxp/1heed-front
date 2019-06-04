@@ -1,18 +1,17 @@
 import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-
 import { FuseConfigService } from '@fuse/services/config.service';
-import { fuseAnimations } from '@fuse/animations';
+
+import { fuseAnimations } from './../../../@fuse/animations';
 
 @Component({
-    selector     : 'lock',
-    templateUrl  : './lock.component.html',
-    styleUrls    : ['./lock.component.scss'],
+    selector: 'page-list',
+    templateUrl: './page-list.component.html',
+    styleUrls: ['./page-list.component.scss'],
     encapsulation: ViewEncapsulation.None,
-    animations   : fuseAnimations
+    animations: fuseAnimations
 })
-export class LockComponent implements OnInit
-{
+export class PageListComponent implements OnInit {
     lockForm: FormGroup;
 
     /**
@@ -24,18 +23,17 @@ export class LockComponent implements OnInit
     constructor(
         private _fuseConfigService: FuseConfigService,
         private _formBuilder: FormBuilder
-    )
-    {
+    ) {
         // Configure the layout
         this._fuseConfigService.config = {
             layout: {
-                navbar   : {
+                navbar: {
                     hidden: true
                 },
-                toolbar  : {
+                toolbar: {
                     hidden: true
                 },
-                footer   : {
+                footer: {
                     hidden: true
                 },
                 sidepanel: {
@@ -52,14 +50,14 @@ export class LockComponent implements OnInit
     /**
      * On init
      */
-    ngOnInit(): void
-    {
+    ngOnInit(): void {
         this.lockForm = this._formBuilder.group({
             username: [
                 {
-                    value   : 'Katherine',
+                    value: 'Katherine',
                     disabled: true
-                }, Validators.required
+                },
+                Validators.required
             ],
             password: ['', Validators.required]
         });

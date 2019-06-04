@@ -1,10 +1,10 @@
-@import "src/@fuse/scss/fuse";
+@import 'src/@fuse/scss/fuse.scss';
 
 login {
-
     #login {
         width: 100%;
-        background: url('/assets/images/backgrounds/dark-material-bg.jpg') no-repeat;
+        background: url('assets/images/backgrounds/dark-material-bg.jpg')
+            no-repeat;
         background-size: cover;
 
         #login-form-wrapper {
@@ -54,13 +54,13 @@ login {
                         margin-top: 8px;
 
                         .remember-me {
-                            margin-bottom: 16px
+                            margin-bottom: 16px;
                         }
 
                         .forgot-password {
                             font-size: 13px;
                             font-weight: 600;
-                            margin-bottom: 16px
+                            margin-bottom: 16px;
                         }
                     }
 
@@ -119,12 +119,11 @@ login {
                 }
 
                 button {
-
                     &.google,
                     &.facebook {
                         width: 192px;
                         text-transform: none;
-                        color: #FFFFFF;
+                        color: #ffffff;
                         font-size: 13px;
                     }
 
@@ -133,7 +132,7 @@ login {
                     }
 
                     &.google {
-                        background-color: #D73D32;
+                        background-color: #d73d32;
                         margin-bottom: 8px;
                     }
 

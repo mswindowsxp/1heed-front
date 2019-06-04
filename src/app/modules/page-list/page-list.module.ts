@@ -1,33 +1,26 @@
 import { NgModule } from '@angular/core';
-import { RouterModule } from '@angular/router';
 import { MatButtonModule, MatFormFieldModule, MatIconModule, MatInputModule } from '@angular/material';
+import { RouterModule } from '@angular/router';
 
-import { FuseSharedModule } from '@fuse/shared.module';
-
-import { LockComponent } from 'app/main/pages/authentication/lock/lock.component';
+import { FuseSharedModule } from './../../../@fuse/shared.module';
+import { PageListComponent } from './page-list.component';
 
 const routes = [
     {
-        path     : 'auth/lock',
-        component: LockComponent
+        path: 'page-list',
+        component: PageListComponent
     }
 ];
 
 @NgModule({
-    declarations: [
-        LockComponent
-    ],
-    imports     : [
+    declarations: [PageListComponent],
+    imports: [
         RouterModule.forChild(routes),
-
         MatButtonModule,
         MatFormFieldModule,
         MatIconModule,
         MatInputModule,
-
         FuseSharedModule
     ]
 })
-export class LockModule
-{
-}
+export class LockModule {}
