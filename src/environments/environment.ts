@@ -5,7 +5,7 @@
 export const environment = {
     production: false,
     hmr: false,
-    apiBasePath: 'https://1heed.com'
+    apiBasePath: 'https://app.1heed.com'
 };
 
 /*
