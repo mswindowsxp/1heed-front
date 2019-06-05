@@ -20,8 +20,35 @@
                 <img [src]="userInformation.user.picture.data.url" />
             </div>
             <div class="title">{{ userInformation.user.name }}</div>
+            <div
+                class="mb-48"
+                [ngClass.lt-lg]="'mr-32'"
+                [ngClass.xs]="'mr-0'"
+                *ngIf="widgets.length === 0"
+            >
+                <div
+                    class="pb-24 font-size-18 font-weight-300"
+                    [ngClass.lt-lg]="'pt-0'"
+                >
+                    Không có bất cứ page nào được quản lí
+                </div>
+                <div
+                    class="p-8 pt-16"
+                    fxLayout="row"
+                    fxLayoutAlign="start center"
+                >
+                    <button mat-button color="accent" (click)="fbLogout()">
+                        Đăng xuất
+                    </button>
+                </div>
+            </div>
             <!-- Widget 9 -->
-            <div class="mb-48" [ngClass.lt-lg]="'mr-32'" [ngClass.xs]="'mr-0'">
+            <div
+                class="mb-48"
+                [ngClass.lt-lg]="'mr-32'"
+                [ngClass.xs]="'mr-0'"
+                *ngIf="widgets.length !== 0"
+            >
                 <div
                     class="pb-24 font-size-18 font-weight-300"
                     [ngClass.lt-lg]="'pt-0'"
