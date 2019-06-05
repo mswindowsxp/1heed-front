@@ -26,8 +26,8 @@ import { ShareModule } from './shared/share.module';
 const appRoutes: Routes = [
     {
         path: 'apps',
-        loadChildren: './main/apps/apps.module#AppsModule',
-        canActivate: [AuthGuard]
+        loadChildren: './main/apps/apps.module#AppsModule'
+        // canActivate: [AuthGuard]
     },
     {
         path: 'pages',

@@ -1,16 +1,12 @@
 @mixin login-theme($theme) {
-
     $background: map-get($theme, background);
     $foreground: map-get($theme, foreground);
     $is-dark: map-get($theme, is-dark);
 
     login {
-
-        #login {
-
-            #login-form-wrapper {
-
-                #login-form {
+        .login {
+            .login-form-wrapper {
+                .login-form {
                     @if ($is-dark) {
                         background: mat-color($fuse-navy, 600);
                     } @else {
@@ -21,7 +17,6 @@
                         color: map-get($foreground, divider);
 
                         .text {
-
                             &:before,
                             &:after {
                                 border-top-color: map-get($foreground, divider);

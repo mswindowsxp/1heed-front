@@ -1,16 +1,10 @@
-<div id="login" fxLayout="column">
+<div class="login" fxLayout="column">
     <div
-        id="login-form-wrapper"
+        class="login-form-wrapper"
         fxLayout="column"
         fxLayoutAlign="center center"
     >
-        <div
-            id="login-form"
-            [@animate]="{
-                value: '*',
-                params: { duration: '300ms', y: '100px' }
-            }"
-        >
+        <div *ngIf="!isLogin" class="login-form">
             <div class="logo">
                 <img src="assets/images/logos/fuse.svg" />
             </div>
@@ -20,6 +14,52 @@
             <button mat-raised-button class="facebook" (click)="fbLogin()">
                 Đăng nhập với FB!
             </button>
+        </div>
+        <div *ngIf="isLogin" class="login-form">
+            <div class="logo">
+                <img [src]="userInformation.user.picture.data.url" />
+            </div>
+            <div class="title">{{ userInformation.user.name }}</div>
+            <!-- Widget 9 -->
+            <div class="mb-48" [ngClass.lt-lg]="'mr-32'" [ngClass.xs]="'mr-0'">
+                <div
+                    class="pb-24 font-size-18 font-weight-300"
+                    [ngClass.lt-lg]="'pt-0'"
+                >
+                    Vui lòng chọn 1 page
+                </div>
+
+                <div class="fuse-card">
+                    <table class="simple clickable">
+                        <tbody>
+                            <tr *ngFor="let row of widgets" >
+                                <td (click)="chosingPage(row)">
+                                    <div class="logo">
+                                        <img
+                                            [src]="row.user.picture.data.url"
+                                        />
+                                    </div>
+                                </td>
+                                <td class="text-right" (click)="chosingPage(row)">{{ row.user.name }}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <div class="card-divider full-width"></div>
+
+                    <div
+                        class="p-8 pt-16"
+                        fxLayout="row"
+                        fxLayoutAlign="start center"
+                    >
+                        <button mat-button color="accent" (click)="fbLogout()">
+                            Không phải {{ userInformation.user.name }} ? Đăng
+                            xuất
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <!-- / widget 9 -->
         </div>
     </div>
 </div>

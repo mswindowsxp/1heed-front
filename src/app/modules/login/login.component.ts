@@ -17,8 +17,9 @@ declare var FB: any;
     animations: fuseAnimations
 })
 export class LoginComponent implements OnInit {
-    isLoginFailure: boolean;
-    isLogin: boolean;
+    isLogin = false;
+    userInformation;
+    widgets;
     /**
      *
      * @param _fuseConfigService
@@ -96,10 +97,15 @@ export class LoginComponent implements OnInit {
                     this.prepareData(response);
                     this.authService.login();
                 } else {
-                    this.isLoginFailure = true;
+                    this.isLogin = true;
                 }
             });
         });
+    }
+
+    fbLogout() {
+        FB.logout();
+        this.isLogin = false;
     }
 
     getUserDataData(response: any): Observable<any> {
@@ -122,7 +128,20 @@ export class LoginComponent implements OnInit {
     prepareData(response: any): void {
         this.getPagesManage(response).subscribe(data => {
             this.authService.isLoggedIn = true;
-            this.router.navigate(['apps/dashboards/analytics']);
+            this.isLogin = true;
+            this.userInformation = data[0];
+            this.widgets = [
+                this.userInformation,
+                this.userInformation,
+                this.userInformation
+            ];
         });
+    }
+
+    chosingPage(page) {
+        if (this.authService.isLoggedIn) {
+            this.router.navigate(['/dashboard']);
+        }
+        console.log(page);
     }
 }
