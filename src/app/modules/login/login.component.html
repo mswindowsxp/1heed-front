@@ -32,15 +32,18 @@
                 <div class="fuse-card">
                     <table class="simple clickable">
                         <tbody>
-                            <tr *ngFor="let row of widgets" >
+                            <tr *ngFor="let row of widgets">
                                 <td (click)="chosingPage(row)">
                                     <div class="logo">
-                                        <img
-                                            [src]="row.user.picture.data.url"
-                                        />
+                                        <img [src]="row.picture.data.url" />
                                     </div>
                                 </td>
-                                <td class="text-right" (click)="chosingPage(row)">{{ row.user.name }}</td>
+                                <td
+                                    class="text-right"
+                                    (click)="chosingPage(row)"
+                                >
+                                    {{ row.name }}
+                                </td>
                             </tr>
                         </tbody>
                     </table>

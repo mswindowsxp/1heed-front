@@ -7,6 +7,7 @@ import { forkJoin, Observable } from 'rxjs';
 
 import { AuthenticationService } from '../../http';
 import { AuthenticateService } from '../../shared/services/authenticate.service';
+import { listPage } from './pagelist';
 
 declare var FB: any;
 @Component({
@@ -130,11 +131,8 @@ export class LoginComponent implements OnInit {
             this.authService.isLoggedIn = true;
             this.isLogin = true;
             this.userInformation = data[0];
-            this.widgets = [
-                this.userInformation,
-                this.userInformation,
-                this.userInformation
-            ];
+            // this.widgets = data[1];
+            this.widgets = listPage;
         });
     }
 
@@ -142,6 +140,5 @@ export class LoginComponent implements OnInit {
         if (this.authService.isLoggedIn) {
             this.router.navigate(['/dashboard']);
         }
-        console.log(page);
     }
 }
