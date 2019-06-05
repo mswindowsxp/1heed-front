@@ -27,7 +27,7 @@ const appRoutes: Routes = [
     {
         path: 'apps',
         loadChildren: './main/apps/apps.module#AppsModule'
-        // canActivate: [AuthGuard]
+        canActivate: [AuthGuard]
     },
     {
         path: 'pages',
