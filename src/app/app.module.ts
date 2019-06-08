@@ -2,7 +2,7 @@ import 'hammerjs';
 
 import { HttpClientModule } from '@angular/common/http';
 import { NgModule } from '@angular/core';
-import { MatIconModule } from '@angular/material';
+import { MatIconModule, MatButtonModule } from '@angular/material';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { RouterModule, Routes } from '@angular/router';
@@ -22,31 +22,14 @@ import { FakeDbService } from './fake-db/fake-db.service';
 import { ApiModule, BASE_PATH, Configuration, ConfigurationParameters } from './http';
 import { AuthGuard } from './shared/guard/auth.guard';
 import { ShareModule } from './shared/share.module';
+import { MatMomentDateModule } from '@angular/material-moment-adapter';
+import { FuseSharedModule } from '@fuse/shared.module';
 
 const appRoutes: Routes = [
     {
         path: 'apps',
         loadChildren: './main/apps/apps.module#AppsModule',
-        canActivate: [AuthGuard]
-    },
-    {
-        path: 'pages',
-        loadChildren: './main/pages/pages.module#PagesModule',
-        canActivate: [AuthGuard]
-    },
-    {
-        path: 'ui',
-        loadChildren: './main/ui/ui.module#UIModule'
-    },
-    {
-        path: 'documentation',
-        loadChildren:
-            './main/documentation/documentation.module#DocumentationModule'
-    },
-    {
-        path: 'angular-material-elements',
-        loadChildren:
-            './main/angular-material-elements/angular-material-elements.module#AngularMaterialElementsModule'
+        // canActivate: [AuthGuard]
     },
     {
         path: 'login',
@@ -78,14 +61,10 @@ const appRoutes: Routes = [
         InMemoryWebApiModule.forRoot(FakeDbService, {
             delay: 0,
             passThruUnknownUrl: true
-        })
-        // // Material moment date module
-        // MatMomentDateModule,
-        // // Material
-        // MatButtonModule,
-        // // Fuse modules
-        // FuseSharedModule,
-        // App modules
+        }),
+        MatMomentDateModule,
+        MatButtonModule,
+        FuseSharedModule
     ],
     providers: [{ provide: BASE_PATH, useValue: environment.apiBasePath }],
     bootstrap: [AppComponent]
