@@ -7,6 +7,7 @@ import { forkJoin, Observable } from 'rxjs';
 
 import { AuthenticationService } from '../../http';
 import { AuthenticateService } from '../../shared/services/authenticate.service';
+import { environment } from './../../../environments/environment';
 
 declare var FB: any;
 @Component({
@@ -69,10 +70,10 @@ export class LoginComponent implements OnInit {
         }
         (window as any).fbAsyncInit = function(): void {
             FB.init({
-                appId: '671546413259624',
+                appId: environment.fbAppId,
                 cookie: true,
                 xfbml: true,
-                version: 'v3.3'
+                version: environment.fbApiVer
             });
             FB.AppEvents.logPageView();
         };
