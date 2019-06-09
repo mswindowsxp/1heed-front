@@ -50,7 +50,7 @@ const appRoutes: Routes = [
     }
 ];
 
-function apiConfigFactory(): Configuration {
+export function apiConfigFactory(): Configuration {
     const params: ConfigurationParameters = {
         basePath: environment.apiBasePath
     };
