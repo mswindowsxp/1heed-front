@@ -22,18 +22,19 @@ import { FuseThemeOptionsModule } from './../@fuse/components/theme-options/them
 import { FuseModule } from './../@fuse/fuse.module';
 import { FakeDbService } from './fake-db/fake-db.service';
 import { ApiModule, BASE_PATH, Configuration, ConfigurationParameters } from './http';
+import { AuthGuard } from './shared/guard/auth.guard';
 import { ShareModule } from './shared/share.module';
 
 const appRoutes: Routes = [
     {
         path: 'apps',
-        loadChildren: './main/apps/apps.module#AppsModule'
-        // canActivate: [AuthGuard]
+        loadChildren: './main/apps/apps.module#AppsModule',
+        canActivate: [AuthGuard]
     },
     {
         path: 'pages',
-        loadChildren: './main/pages/pages.module#PagesModule'
-        // canActivate: [AuthGuard]
+        loadChildren: './main/pages/pages.module#PagesModule',
+        canActivate: [AuthGuard]
     },
     {
         path: 'documentation',
