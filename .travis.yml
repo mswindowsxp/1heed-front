@@ -17,13 +17,13 @@ install:
   - travis_retry npm i
 before_script:
 script:
-  - npm run build
+  - npm run build-prod
   - npm run lint
   - eval "$(ssh-agent -s)"
   - chmod 600 ./deploy_key
   - echo -e "Host 176.223.141.228\n\tStrictHostKeyChecking no\n" >> ~/.ssh/config
   - ssh-add ./deploy_key
   - ssh -i ./deploy_key root@176.223.141.228 pwd
-  - scp -i ./deploy_key -r -v dist/ root@176.223.141.228:/opt/oneheed/dist
+  - scp -i ./deploy_key -r -v dist/ root@176.223.141.228:/opt/oneheed
 git:
   depth: 1
