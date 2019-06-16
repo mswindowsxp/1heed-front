@@ -17,15 +17,15 @@ import { CustomHttpUrlEncodingCodec }                        from '../encoder';
 
 import { Observable }                                        from 'rxjs/Observable';
 
-import { AccessTokenPayload } from '../model/accessTokenPayload';
-import { LoginResponse } from '../model/loginResponse';
+import { BigDecimal } from '../model/bigDecimal';
+import { PageAccounts } from '../model/pageAccounts';
 
 import { BASE_PATH, COLLECTION_FORMATS }                     from '../variables';
 import { Configuration }                                     from '../configuration';
 
 
 @Injectable()
-export class AuthenticationService {
+export class MessagesService {
 
     protected basePath = 'https://virtserver.swaggerhub.com/dungvv/1heed/1.0.0';
     public defaultHeaders = new HttpHeaders();
@@ -58,21 +58,36 @@ export class AuthenticationService {
 
     /**
      * 
-     * Login using facebook account
-     * @param body pass authorization code to login
+     * get list of recent messages of a page
+     * @param authorization 
+     * @param fbPageId 
+     * @param page 
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public apiLoginFacebookPost(body: AccessTokenPayload, observe?: 'body', reportProgress?: boolean): Observable<LoginResponse>;
-    public apiLoginFacebookPost(body: AccessTokenPayload, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<LoginResponse>>;
-    public apiLoginFacebookPost(body: AccessTokenPayload, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<LoginResponse>>;
-    public apiLoginFacebookPost(body: AccessTokenPayload, observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
+    public apiMessagesRecentGet(authorization: string, fbPageId?: string, page?: BigDecimal, observe?: 'body', reportProgress?: boolean): Observable<Array<PageAccounts>>;
+    public apiMessagesRecentGet(authorization: string, fbPageId?: string, page?: BigDecimal, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<Array<PageAccounts>>>;
+    public apiMessagesRecentGet(authorization: string, fbPageId?: string, page?: BigDecimal, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<Array<PageAccounts>>>;
+    public apiMessagesRecentGet(authorization: string, fbPageId?: string, page?: BigDecimal, observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
 
-        if (body === null || body === undefined) {
-            throw new Error('Required parameter body was null or undefined when calling apiLoginFacebookPost.');
+        if (authorization === null || authorization === undefined) {
+            throw new Error('Required parameter authorization was null or undefined when calling apiMessagesRecentGet.');
+        }
+
+
+
+        let queryParameters = new HttpParams({encoder: new CustomHttpUrlEncodingCodec()});
+        if (fbPageId !== undefined && fbPageId !== null) {
+            queryParameters = queryParameters.set('fbPageId', <any>fbPageId);
+        }
+        if (page !== undefined && page !== null) {
+            queryParameters = queryParameters.set('page', <any>page);
         }
 
         let headers = this.defaultHeaders;
+        if (authorization !== undefined && authorization !== null) {
+            headers = headers.set('Authorization', String(authorization));
+        }
 
         // to determine the Accept header
         let httpHeaderAccepts: string[] = [
@@ -85,16 +100,11 @@ export class AuthenticationService {
 
         // to determine the Content-Type header
         const consumes: string[] = [
-            'application/json'
         ];
-        const httpContentTypeSelected: string | undefined = this.configuration.selectHeaderContentType(consumes);
-        if (httpContentTypeSelected != undefined) {
-            headers = headers.set('Content-Type', httpContentTypeSelected);
-        }
 
-        return this.httpClient.post<LoginResponse>(`${this.basePath}/api/login/facebook`,
-            body,
+        return this.httpClient.get<Array<PageAccounts>>(`${this.basePath}/api/messages/recent`,
             {
+                params: queryParameters,
                 withCredentials: this.configuration.withCredentials,
                 headers: headers,
                 observe: observe,
