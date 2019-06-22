@@ -96,7 +96,7 @@ export class LoginComponent implements OnInit {
             this.ngZone.run(() => {
                 if (response.authResponse) {
                     this.prepareData(response);
-                    this.authService.login();
+                    this.authService.login(response.authResponse.accessToken);
                 } else {
                     this.isLogin = true;
                 }
@@ -104,7 +104,7 @@ export class LoginComponent implements OnInit {
         });
     }
 
-    fbLogout() {
+    fbLogout(): void {
         FB.logout();
         this.isLogin = false;
     }
@@ -127,16 +127,19 @@ export class LoginComponent implements OnInit {
     }
 
     prepareData(response: any): void {
-        this.getPagesManage(response).subscribe(data => {
-            this.authService.isLoggedIn = true;
-            this.isLogin = true;
-            this.userInformation = data[0];
-            this.widgets = data[1];
-            // this.widgets = listPage;
-        });
+        this.getPagesManage(response).subscribe(
+            data => {
+                this.authService.isLoggedIn = true;
+                this.isLogin = true;
+                this.userInformation = data[0];
+                this.widgets = data[1];
+                // this.widgets = listPage;
+            },
+            error => {}
+        );
     }
 
-    chosingPage(page) {
+    chosingPage(page): void {
         if (this.authService.isLoggedIn) {
             this.router.navigate(['/dashboard']);
         }

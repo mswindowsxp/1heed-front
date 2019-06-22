@@ -1,6 +1,8 @@
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 
+import { AuthConst } from './../constants/auth.const';
+
 @Injectable({ providedIn: 'root' })
 export class AuthenticateService {
     public isLoggedIn: boolean;
@@ -9,7 +11,8 @@ export class AuthenticateService {
 
     // store the URL so we can redirect after logging in
 
-    login(): void {
+    login(token: string): void {
         this.isLoggedIn = true;
+        sessionStorage.setItem(AuthConst.TOKEN, token);
     }
 }

@@ -24,6 +24,7 @@ import { FakeDbService } from './fake-db/fake-db.service';
 import { ApiModule, BASE_PATH, Configuration, ConfigurationParameters } from './http';
 import { AuthGuard } from './shared/guard/auth.guard';
 import { ShareModule } from './shared/share.module';
+import { AuthComponent } from './modules/auth/auth.component';
 
 const appRoutes: Routes = [
     {
@@ -59,7 +60,7 @@ export function apiConfigFactory(): Configuration {
 }
 
 @NgModule({
-    declarations: [AppComponent],
+    declarations: [AppComponent, AuthComponent],
     imports: [
         BrowserModule,
         BrowserAnimationsModule,
