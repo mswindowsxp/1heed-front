@@ -58,24 +58,17 @@ export class PageService {
     /**
      * 
      * get list of pages user administer
-     * @param authorization 
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public apiFacebookPagesGet(authorization: string, observe?: 'body', reportProgress?: boolean): Observable<Array<PageAccounts>>;
-    public apiFacebookPagesGet(authorization: string, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<Array<PageAccounts>>>;
-    public apiFacebookPagesGet(authorization: string, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<Array<PageAccounts>>>;
-    public apiFacebookPagesGet(authorization: string, observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
-
-        if (authorization === null || authorization === undefined) {
-            throw new Error('Required parameter authorization was null or undefined when calling apiFacebookPagesGet.');
-        }
+    public apiFacebookPagesGet(observe?: 'body', reportProgress?: boolean): Observable<Array<PageAccounts>>;
+    public apiFacebookPagesGet(observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<Array<PageAccounts>>>;
+    public apiFacebookPagesGet(observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<Array<PageAccounts>>>;
+    public apiFacebookPagesGet(observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
 
         let headers = this.defaultHeaders;
-        if (authorization !== undefined && authorization !== null) {
-            headers = headers.set('Authorization', String(authorization));
-        }
 
+        // authentication (bearerAuth) required
         // to determine the Accept header
         let httpHeaderAccepts: string[] = [
             'application/json'

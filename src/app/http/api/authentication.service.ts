@@ -17,8 +17,10 @@ import { CustomHttpUrlEncodingCodec }                        from '../encoder';
 
 import { Observable }                                        from 'rxjs/Observable';
 
-import { AccessTokenPayload } from '../model/accessTokenPayload';
 import { LoginResponse } from '../model/loginResponse';
+import { RefreshTokenRequest } from '../model/refreshTokenRequest';
+import { SocialLoginRequest } from '../model/socialLoginRequest';
+import { VerifyTokenRequest } from '../model/verifyTokenRequest';
 
 import { BASE_PATH, COLLECTION_FORMATS }                     from '../variables';
 import { Configuration }                                     from '../configuration';
@@ -63,10 +65,10 @@ export class AuthenticationService {
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public apiLoginFacebookPost(body: AccessTokenPayload, observe?: 'body', reportProgress?: boolean): Observable<LoginResponse>;
-    public apiLoginFacebookPost(body: AccessTokenPayload, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<LoginResponse>>;
-    public apiLoginFacebookPost(body: AccessTokenPayload, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<LoginResponse>>;
-    public apiLoginFacebookPost(body: AccessTokenPayload, observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
+    public apiLoginFacebookPost(body: SocialLoginRequest, observe?: 'body', reportProgress?: boolean): Observable<LoginResponse>;
+    public apiLoginFacebookPost(body: SocialLoginRequest, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<LoginResponse>>;
+    public apiLoginFacebookPost(body: SocialLoginRequest, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<LoginResponse>>;
+    public apiLoginFacebookPost(body: SocialLoginRequest, observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
 
         if (body === null || body === undefined) {
             throw new Error('Required parameter body was null or undefined when calling apiLoginFacebookPost.');
@@ -93,6 +95,93 @@ export class AuthenticationService {
         }
 
         return this.httpClient.post<LoginResponse>(`${this.basePath}/api/login/facebook`,
+            body,
+            {
+                withCredentials: this.configuration.withCredentials,
+                headers: headers,
+                observe: observe,
+                reportProgress: reportProgress
+            }
+        );
+    }
+
+    /**
+     * 
+     * refresh token if current token is not valid
+     * @param body 
+     * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
+     * @param reportProgress flag to report request and response progress.
+     */
+    public apiRefreshTokenPost(body?: RefreshTokenRequest, observe?: 'body', reportProgress?: boolean): Observable<LoginResponse>;
+    public apiRefreshTokenPost(body?: RefreshTokenRequest, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<LoginResponse>>;
+    public apiRefreshTokenPost(body?: RefreshTokenRequest, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<LoginResponse>>;
+    public apiRefreshTokenPost(body?: RefreshTokenRequest, observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
+
+
+        let headers = this.defaultHeaders;
+
+        // to determine the Accept header
+        let httpHeaderAccepts: string[] = [
+            'application/json'
+        ];
+        const httpHeaderAcceptSelected: string | undefined = this.configuration.selectHeaderAccept(httpHeaderAccepts);
+        if (httpHeaderAcceptSelected != undefined) {
+            headers = headers.set('Accept', httpHeaderAcceptSelected);
+        }
+
+        // to determine the Content-Type header
+        const consumes: string[] = [
+            'application/json'
+        ];
+        const httpContentTypeSelected: string | undefined = this.configuration.selectHeaderContentType(consumes);
+        if (httpContentTypeSelected != undefined) {
+            headers = headers.set('Content-Type', httpContentTypeSelected);
+        }
+
+        return this.httpClient.post<LoginResponse>(`${this.basePath}/api/refresh/token`,
+            body,
+            {
+                withCredentials: this.configuration.withCredentials,
+                headers: headers,
+                observe: observe,
+                reportProgress: reportProgress
+            }
+        );
+    }
+
+    /**
+     * 
+     * verify jwt token
+     * @param body 
+     * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
+     * @param reportProgress flag to report request and response progress.
+     */
+    public apiVerifyTokenPost(body?: VerifyTokenRequest, observe?: 'body', reportProgress?: boolean): Observable<any>;
+    public apiVerifyTokenPost(body?: VerifyTokenRequest, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<any>>;
+    public apiVerifyTokenPost(body?: VerifyTokenRequest, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<any>>;
+    public apiVerifyTokenPost(body?: VerifyTokenRequest, observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
+
+
+        let headers = this.defaultHeaders;
+
+        // to determine the Accept header
+        let httpHeaderAccepts: string[] = [
+        ];
+        const httpHeaderAcceptSelected: string | undefined = this.configuration.selectHeaderAccept(httpHeaderAccepts);
+        if (httpHeaderAcceptSelected != undefined) {
+            headers = headers.set('Accept', httpHeaderAcceptSelected);
+        }
+
+        // to determine the Content-Type header
+        const consumes: string[] = [
+            'application/json'
+        ];
+        const httpContentTypeSelected: string | undefined = this.configuration.selectHeaderContentType(consumes);
+        if (httpContentTypeSelected != undefined) {
+            headers = headers.set('Content-Type', httpContentTypeSelected);
+        }
+
+        return this.httpClient.post<any>(`${this.basePath}/api/verify/token`,
             body,
             {
                 withCredentials: this.configuration.withCredentials,
