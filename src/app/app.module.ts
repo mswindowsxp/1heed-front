@@ -24,9 +24,12 @@ import { FakeDbService } from './fake-db/fake-db.service';
 import { ApiModule, BASE_PATH, Configuration, ConfigurationParameters } from './http';
 import { AuthGuard } from './shared/guard/auth.guard';
 import { ShareModule } from './shared/share.module';
-import { AuthComponent } from './modules/auth/auth.component';
 
 const appRoutes: Routes = [
+    {
+        path: 'authentication',
+        loadChildren: './modules/auth/auth.module#AuthModule'
+    },
     {
         path: 'apps',
         loadChildren: './main/apps/apps.module#AppsModule',
@@ -42,13 +45,14 @@ const appRoutes: Routes = [
         loadChildren:
             './main/documentation/documentation.module#DocumentationModule'
     },
+
     {
         path: 'login',
         loadChildren: './modules/login/login.module#LoginModule'
     },
     {
         path: '**',
-        redirectTo: '/apps/chat'
+        redirectTo: 'authentication'
     }
 ];
 
@@ -60,7 +64,7 @@ export function apiConfigFactory(): Configuration {
 }
 
 @NgModule({
-    declarations: [AppComponent, AuthComponent],
+    declarations: [AppComponent],
     imports: [
         BrowserModule,
         BrowserAnimationsModule,
