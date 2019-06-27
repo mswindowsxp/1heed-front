@@ -10,6 +10,7 @@ import {
 import { RouterModule } from '@angular/router';
 import { FuseSharedModule } from '@fuse/shared.module';
 import { LoginComponent } from 'app/modules/login/login.component';
+import { FacebookService } from 'app/shared/services/facebook.service';
 
 const routes = [
     {
@@ -29,6 +30,7 @@ const routes = [
         MatInputModule,
         MatMenuModule,
         FuseSharedModule
-    ]
+    ],
+    providers: [FacebookService]
 })
 export class LoginModule {}

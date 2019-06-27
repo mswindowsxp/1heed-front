@@ -9,21 +9,17 @@
  * https://github.com/swagger-api/swagger-codegen.git
  * Do not edit the class manually.
  *//* tslint:disable:no-unused-variable member-ordering */
+import { HttpClient, HttpEvent, HttpHeaders, HttpResponse } from '@angular/common/http';
+import { Inject, Injectable, Optional } from '@angular/core';
+import { Observable } from 'rxjs/Observable';
 
-import { Inject, Injectable, Optional }                      from '@angular/core';
-import { HttpClient, HttpHeaders, HttpParams,
-         HttpResponse, HttpEvent }                           from '@angular/common/http';
-import { CustomHttpUrlEncodingCodec }                        from '../encoder';
-
-import { Observable }                                        from 'rxjs/Observable';
-
+import { Configuration } from '../configuration';
 import { LoginResponse } from '../model/loginResponse';
 import { RefreshTokenRequest } from '../model/refreshTokenRequest';
 import { SocialLoginRequest } from '../model/socialLoginRequest';
 import { VerifyTokenRequest } from '../model/verifyTokenRequest';
+import { BASE_PATH } from '../variables';
 
-import { BASE_PATH, COLLECTION_FORMATS }                     from '../variables';
-import { Configuration }                                     from '../configuration';
 
 
 @Injectable()
@@ -138,7 +134,7 @@ export class AuthenticationService {
             headers = headers.set('Content-Type', httpContentTypeSelected);
         }
 
-        return this.httpClient.post<LoginResponse>(`${this.basePath}/api/refresh/token`,
+        return this.httpClient.post<LoginResponse>(`${this.basePath}/api/auth/refresh/token`,
             body,
             {
                 withCredentials: this.configuration.withCredentials,
@@ -181,7 +177,7 @@ export class AuthenticationService {
             headers = headers.set('Content-Type', httpContentTypeSelected);
         }
 
-        return this.httpClient.post<any>(`${this.basePath}/api/verify/token`,
+        return this.httpClient.post<any>(`${this.basePath}/api/auth/verify/token`,
             body,
             {
                 withCredentials: this.configuration.withCredentials,

@@ -2,12 +2,15 @@ import { Component, NgZone, OnInit, ViewEncapsulation } from '@angular/core';
 import { Router } from '@angular/router';
 import { fuseAnimations } from '@fuse/animations';
 import { FuseConfigService } from '@fuse/services/config.service';
-import { PageService } from 'app/http/api/page.service';
+import { FuseSplashScreenService } from '@fuse/services/splash-screen.service';
+import { FacebookService } from 'app/shared/services/facebook.service';
 import { forkJoin, Observable } from 'rxjs';
 
 import { AuthenticationService } from '../../http';
 import { AuthenticateService } from '../../shared/services/authenticate.service';
 import { environment } from './../../../environments/environment';
+import { AuthConst } from './../../shared/constants/auth.const';
+import { AuthResponse, FacebookResponse } from './../../shared/models/facebook-token';
 
 declare var FB: any;
 @Component({
@@ -21,6 +24,9 @@ export class LoginComponent implements OnInit {
     isLogin = false;
     userInformation;
     widgets;
+    token: string;
+    userID: string;
+    experiedIn: number;
     /**
      *
      * @param _fuseConfigService
@@ -36,7 +42,8 @@ export class LoginComponent implements OnInit {
         private readonly router: Router,
         private ngZone: NgZone,
         private readonly authenticateService: AuthenticationService,
-        private readonly pageService: PageService
+        private readonly pageService: FacebookService,
+        private readonly splasScreen: FuseSplashScreenService
     ) {
         // Configure the layout
         this._fuseConfigService.config = {
@@ -65,38 +72,50 @@ export class LoginComponent implements OnInit {
      * On init
      */
     ngOnInit(): void {
-        if (this.authService.isLoggedIn) {
-            this.router.navigate(['/dashboard']);
-        }
-        (window as any).fbAsyncInit = function(): void {
-            FB.init({
-                appId: environment.fbAppId,
-                cookie: true,
-                xfbml: true,
-                version: environment.fbApiVer
+        this.splasScreen.show();
+        if (this.authService.isLogin()) {
+            this.token = sessionStorage.getItem(AuthConst.FB_TOKEN);
+            this.userID = sessionStorage.getItem(AuthConst.USER_ID);
+            this.experiedIn = parseInt(
+                sessionStorage.getItem(AuthConst.EXPERIED_TIME),
+                0
+            );
+            this.prepareData({
+                expiresIn: this.experiedIn,
+                accessToken: this.token,
+                userID: this.userID
             });
-            FB.AppEvents.logPageView();
-        };
+        } else {
+            (window as any).fbAsyncInit = function(): void {
+                FB.init({
+                    appId: environment.fbAppId,
+                    cookie: true,
+                    xfbml: true,
+                    version: environment.fbApiVer
+                });
+                FB.AppEvents.logPageView();
+            };
 
-        (function(d, s, id): void {
-            var js,
-                fjs = d.getElementsByTagName(s)[0];
-            if (d.getElementById(id)) {
-                return;
-            }
-            js = d.createElement(s);
-            js.id = id;
-            js.src = 'https://connect.facebook.net/en_US/sdk.js';
-            fjs.parentNode.insertBefore(js, fjs);
-        })(document, 'script', 'facebook-jssdk');
+            (function(d, s, id): void {
+                var js,
+                    fjs = d.getElementsByTagName(s)[0];
+                if (d.getElementById(id)) {
+                    return;
+                }
+                js = d.createElement(s);
+                js.id = id;
+                js.src = 'https://connect.facebook.net/en_US/sdk.js';
+                fjs.parentNode.insertBefore(js, fjs);
+            })(document, 'script', 'facebook-jssdk');
+        }
     }
 
     fbLogin(): void {
-        FB.login(response => {
+        this.splasScreen.show();
+        FB.login((response: FacebookResponse) => {
             this.ngZone.run(() => {
                 if (response.authResponse) {
-                    this.prepareData(response);
-                    this.authService.login(response.authResponse.accessToken);
+                    this.prepareData(response.authResponse);
                 } else {
                     this.isLogin = true;
                 }
@@ -109,39 +128,50 @@ export class LoginComponent implements OnInit {
         this.isLogin = false;
     }
 
-    getUserDataData(response: any): Observable<any> {
+    getUserDataData(authResponse: AuthResponse): Observable<any> {
         return this.authenticateService.apiLoginFacebookPost({
-            accessToken: response.authResponse.accessToken,
-            userId: response.authResponse.userID,
-            expires: response.authResponse.expiresIn
+            accessToken: authResponse.accessToken,
+            userId: authResponse.userID,
+            expires: authResponse.expiresIn
         });
     }
 
-    getPagesManage(response: any): Observable<any> {
+    getPagesManage(authResponse: AuthResponse): Observable<any> {
         return forkJoin(
-            this.getUserDataData(response),
-            this.pageService.apiFacebookPagesGet(
-                response.authResponse.accessToken
-            )
+            this.getUserDataData(authResponse),
+            this.pageService.apiFacebookPagesGet(authResponse.accessToken)
         );
     }
 
-    prepareData(response: any): void {
-        this.getPagesManage(response).subscribe(
+    prepareData(authResponse: AuthResponse): void {
+        sessionStorage.setItem(AuthConst.FB_TOKEN, authResponse.accessToken);
+        sessionStorage.setItem(AuthConst.USER_ID, authResponse.userID);
+        sessionStorage.setItem(
+            AuthConst.EXPERIED_TIME,
+            authResponse.expiresIn.toString()
+        );
+        this.getPagesManage(authResponse).subscribe(
             data => {
-                this.authService.isLoggedIn = true;
+                this.splasScreen.hide();
                 this.isLogin = true;
                 this.userInformation = data[0];
-                this.widgets = data[1];
-                // this.widgets = listPage;
+                this.widgets = data[1].data;
+                this.authService.login();
+                sessionStorage.setItem(AuthConst.TOKEN, data[0].token);
+                sessionStorage.setItem(
+                    AuthConst.REFRESH_TOKEN,
+                    data[0].refreshToken
+                );
             },
-            error => {}
+            error => {
+                this.splasScreen.hide();
+            }
         );
     }
 
     chosingPage(page): void {
-        if (this.authService.isLoggedIn) {
-            this.router.navigate(['/dashboard']);
+        if (this.authService.isLogin()) {
+            this.router.navigate(['/apps/chat']);
         }
     }
 }
