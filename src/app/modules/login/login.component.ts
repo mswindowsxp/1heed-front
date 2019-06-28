@@ -10,7 +10,10 @@ import { AuthenticationService } from '../../http';
 import { AuthenticateService } from '../../shared/services/authenticate.service';
 import { environment } from './../../../environments/environment';
 import { AuthConst } from './../../shared/constants/auth.const';
-import { AuthResponse, FacebookResponse } from './../../shared/models/facebook-token';
+import {
+    AuthResponse,
+    FacebookResponse
+} from './../../shared/models/facebook-token';
 
 declare var FB: any;
 @Component({
@@ -112,15 +115,18 @@ export class LoginComponent implements OnInit {
 
     fbLogin(): void {
         this.splasScreen.show();
-        FB.login((response: FacebookResponse) => {
-            this.ngZone.run(() => {
-                if (response.authResponse) {
-                    this.prepareData(response.authResponse);
-                } else {
-                    this.isLogin = true;
-                }
-            });
-        });
+        FB.login(
+            (response: FacebookResponse) => {
+                this.ngZone.run(() => {
+                    if (response.authResponse) {
+                        this.prepareData(response.authResponse);
+                    } else {
+                        this.isLogin = true;
+                    }
+                });
+            },
+            { scope: 'email,manage_pages' }
+        );
     }
 
     fbLogout(): void {
