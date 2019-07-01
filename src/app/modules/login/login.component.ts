@@ -3,18 +3,14 @@ import { Router } from '@angular/router';
 import { fuseAnimations } from '@fuse/animations';
 import { FuseConfigService } from '@fuse/services/config.service';
 import { FuseSplashScreenService } from '@fuse/services/splash-screen.service';
+import { Data } from 'app/shared/models';
 import { FacebookService } from 'app/shared/services/facebook.service';
 import { forkJoin, Observable } from 'rxjs';
-
-import { AuthenticationService, PageService } from '../../http';
+import { AuthenticationService, PageService } from '../../core/http';
 import { AuthenticateService } from '../../shared/services/authenticate.service';
 import { environment } from './../../../environments/environment';
 import { AuthConst } from './../../shared/constants/auth.const';
-import {
-    AuthResponse,
-    FacebookResponse
-} from './../../shared/models/facebook-token';
-import { Data } from 'app/shared/models';
+import { AuthResponse, FacebookResponse } from './../../shared/models/facebook-token';
 
 declare var FB: any;
 @Component({
@@ -81,10 +77,7 @@ export class LoginComponent implements OnInit {
         if (this.authService.isLogin()) {
             this.token = sessionStorage.getItem(AuthConst.FB_TOKEN);
             this.userID = sessionStorage.getItem(AuthConst.USER_ID);
-            this.experiedIn = parseInt(
-                sessionStorage.getItem(AuthConst.EXPERIED_TIME),
-                0
-            );
+            this.experiedIn = parseInt(sessionStorage.getItem(AuthConst.EXPERIED_TIME), 0);
             this.prepareData({
                 expiresIn: this.experiedIn,
                 accessToken: this.token,
@@ -145,19 +138,13 @@ export class LoginComponent implements OnInit {
     }
 
     getPagesManage(authResponse: AuthResponse): Observable<any> {
-        return forkJoin(
-            this.getUserDataData(authResponse),
-            this.facebookService.apiFacebookPagesGet(authResponse.accessToken)
-        );
+        return forkJoin(this.getUserDataData(authResponse), this.facebookService.apiFacebookPagesGet(authResponse.accessToken));
     }
 
     prepareData(authResponse: AuthResponse): void {
         sessionStorage.setItem(AuthConst.FB_TOKEN, authResponse.accessToken);
         sessionStorage.setItem(AuthConst.USER_ID, authResponse.userID);
-        sessionStorage.setItem(
-            AuthConst.EXPERIED_TIME,
-            authResponse.expiresIn.toString()
-        );
+        sessionStorage.setItem(AuthConst.EXPERIED_TIME, authResponse.expiresIn.toString());
         this.getPagesManage(authResponse).subscribe(
             data => {
                 this.splasScreen.hide();
@@ -166,10 +153,7 @@ export class LoginComponent implements OnInit {
                 this.widgets = data[1].data;
                 this.authService.login();
                 sessionStorage.setItem(AuthConst.TOKEN, data[0].token);
-                sessionStorage.setItem(
-                    AuthConst.REFRESH_TOKEN,
-                    data[0].refreshToken
-                );
+                sessionStorage.setItem(AuthConst.REFRESH_TOKEN, data[0].refreshToken);
             },
             error => {
                 this.splasScreen.hide();
@@ -179,11 +163,16 @@ export class LoginComponent implements OnInit {
 
     chosingPage(page: Data): void {
         if (this.authService.isLogin()) {
-            this.pageService.apiFacebookPagesPost({accessToken: page.access_token, avatar: page.picture.data.url, id: page.id, name: page.name}).subscribe(response => {
-                this.router.navigate(['/apps/chat']);
-            }, error => {
-                console.log(error)
-            })
+            this.pageService
+                .apiFacebookPagesPost({ accessToken: page.access_token, avatar: page.picture.data.url, id: page.id, name: page.name })
+                .subscribe(
+                    response => {
+                        this.router.navigate(['/apps/chat']);
+                    },
+                    error => {
+                        console.log(error);
+                    }
+                );
         }
     }
 }

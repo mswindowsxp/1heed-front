@@ -1,11 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { FuseConfigService } from '@fuse/services/config.service';
-import { AuthenticationService } from 'app/http/api/api';
+import { AuthenticationService } from 'app/core/http/api/api';
 import { AuthConst } from 'app/shared/constants/auth.const';
 
 import { FuseSplashScreenService } from './../../../@fuse/services/splash-screen.service';
-import { LoginResponse } from './../../http/model/loginResponse';
+import { LoginResponse } from '../../core/http/model/loginResponse';
 import { AuthenticateService } from './../../shared/services/authenticate.service';
 
 @Component({

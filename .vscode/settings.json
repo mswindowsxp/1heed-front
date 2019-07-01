@@ -3,5 +3,36 @@
         "activityBar.background": "#22321A",
         "titleBar.activeBackground": "#2F4624",
         "titleBar.activeForeground": "#F9FBF7"
-    }
+    },
+    "git.autofetch": true,
+    "explorer.confirmDragAndDrop": false,
+    "javascript.implicitProjectConfig.checkJs": true,
+    "npm.enableScriptExplorer": true,
+    "debug.node.autoAttach": "off",
+    "terminal.integrated.shell.windows": "C:\\Windows\\System32\\cmd.exe",
+    "typescript.updateImportsOnFileMove.enabled": "always",
+    "window.zoomLevel": 0,
+    "workbench.editor.showTabs": true,
+    "explorer.confirmDelete": false,
+    "prettier.printWidth": 140,
+    "files.autoSave": "onFocusChange",
+    "editor.tabCompletion": "on",
+    "editor.minimap.enabled": false,
+    "editor.fontLigatures": false,
+    "editor.formatOnType": true,
+    "editor.formatOnSave": true,
+    "editor.formatOnPaste": true,
+    "prettier.singleQuote": true,
+    "prettier.eslintIntegration": true,
+    "editor.codeActionsOnSave": {
+        "source.organizeImports": true
+    },
+    "prettier.tabWidth": 2,
+    "[html]": {
+        "editor.defaultFormatter": "HookyQR.beautify"
+    },
+    "vsicons.projectDetection.disableDetect": true,
+    "angular-schule.configUpdated": "0.4.6",
+    "vsicons.projectDetection.autoReload": true,
+    "workbench.iconTheme": "vscode-icons"
 }

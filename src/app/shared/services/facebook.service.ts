@@ -2,8 +2,8 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 
-import { Configuration } from './../../http/configuration';
-import { PageAccounts } from './../../http/model/pageAccounts';
+import { Configuration } from '../../core/http/configuration';
+import { PageAccounts } from '../../core/http/model/pageAccounts';
 
 @Injectable()
 export class FacebookService {
