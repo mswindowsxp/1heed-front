@@ -17,7 +17,8 @@ import { CustomHttpUrlEncodingCodec }                        from '../encoder';
 
 import { Observable }                                        from 'rxjs/Observable';
 
-import { PageAccounts } from '../model/pageAccounts';
+import { RegisterPageRequest } from '../model/registerPageRequest';
+import { RegisterPageResponse } from '../model/registerPageResponse';
 
 import { BASE_PATH, COLLECTION_FORMATS }                     from '../variables';
 import { Configuration }                                     from '../configuration';
@@ -57,25 +58,20 @@ export class PageService {
 
     /**
      * 
-     * get list of pages user administer
-     * @param authorization 
+     * register page to manage page messenger
+     * @param body 
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public apiFacebookPagesGet(authorization: string, observe?: 'body', reportProgress?: boolean): Observable<Array<PageAccounts>>;
-    public apiFacebookPagesGet(authorization: string, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<Array<PageAccounts>>>;
-    public apiFacebookPagesGet(authorization: string, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<Array<PageAccounts>>>;
-    public apiFacebookPagesGet(authorization: string, observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
+    public apiFacebookPagesPost(body?: RegisterPageRequest, observe?: 'body', reportProgress?: boolean): Observable<RegisterPageResponse>;
+    public apiFacebookPagesPost(body?: RegisterPageRequest, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<RegisterPageResponse>>;
+    public apiFacebookPagesPost(body?: RegisterPageRequest, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<RegisterPageResponse>>;
+    public apiFacebookPagesPost(body?: RegisterPageRequest, observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
 
-        if (authorization === null || authorization === undefined) {
-            throw new Error('Required parameter authorization was null or undefined when calling apiFacebookPagesGet.');
-        }
 
         let headers = this.defaultHeaders;
-        if (authorization !== undefined && authorization !== null) {
-            headers = headers.set('Authorization', String(authorization));
-        }
 
+        // authentication (bearerAuth) required
         // to determine the Accept header
         let httpHeaderAccepts: string[] = [
             'application/json'
@@ -87,9 +83,15 @@ export class PageService {
 
         // to determine the Content-Type header
         const consumes: string[] = [
+            'application/json'
         ];
+        const httpContentTypeSelected: string | undefined = this.configuration.selectHeaderContentType(consumes);
+        if (httpContentTypeSelected != undefined) {
+            headers = headers.set('Content-Type', httpContentTypeSelected);
+        }
 
-        return this.httpClient.get<Array<PageAccounts>>(`${this.basePath}/api/facebook/pages`,
+        return this.httpClient.post<RegisterPageResponse>(`${this.basePath}/api/facebook/pages`,
+            body,
             {
                 withCredentials: this.configuration.withCredentials,
                 headers: headers,

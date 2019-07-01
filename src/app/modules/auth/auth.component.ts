@@ -47,7 +47,7 @@ export class AuthComponent implements OnInit {
             this.splasScreen.show();
             // Verify token
             this.authenticationService
-                .apiVerifyTokenPost({ token: token })
+                .apiAuthVerifyTokenPost({ token: token })
                 .subscribe(
                     data => {
                         this.authSerice.login();
@@ -56,7 +56,7 @@ export class AuthComponent implements OnInit {
                     error => {
                         // Refresh token if token can not verify
                         this.authenticationService
-                            .apiRefreshTokenPost({
+                            .apiAuthRefreshTokenPost({
                                 refreshToken: refreshToken
                             })
                             .subscribe(

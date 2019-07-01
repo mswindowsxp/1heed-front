@@ -6,7 +6,7 @@ import { FuseSplashScreenService } from '@fuse/services/splash-screen.service';
 import { FacebookService } from 'app/shared/services/facebook.service';
 import { forkJoin, Observable } from 'rxjs';
 
-import { AuthenticationService } from '../../http';
+import { AuthenticationService, PageService } from '../../http';
 import { AuthenticateService } from '../../shared/services/authenticate.service';
 import { environment } from './../../../environments/environment';
 import { AuthConst } from './../../shared/constants/auth.const';
@@ -14,6 +14,7 @@ import {
     AuthResponse,
     FacebookResponse
 } from './../../shared/models/facebook-token';
+import { Data } from 'app/shared/models';
 
 declare var FB: any;
 @Component({
@@ -45,8 +46,9 @@ export class LoginComponent implements OnInit {
         private readonly router: Router,
         private ngZone: NgZone,
         private readonly authenticateService: AuthenticationService,
-        private readonly pageService: FacebookService,
-        private readonly splasScreen: FuseSplashScreenService
+        private readonly facebookService: FacebookService,
+        private readonly splasScreen: FuseSplashScreenService,
+        private readonly pageService: PageService
     ) {
         // Configure the layout
         this._fuseConfigService.config = {
@@ -145,7 +147,7 @@ export class LoginComponent implements OnInit {
     getPagesManage(authResponse: AuthResponse): Observable<any> {
         return forkJoin(
             this.getUserDataData(authResponse),
-            this.pageService.apiFacebookPagesGet(authResponse.accessToken)
+            this.facebookService.apiFacebookPagesGet(authResponse.accessToken)
         );
     }
 
@@ -175,9 +177,13 @@ export class LoginComponent implements OnInit {
         );
     }
 
-    chosingPage(page): void {
+    chosingPage(page: Data): void {
         if (this.authService.isLogin()) {
-            this.router.navigate(['/apps/chat']);
+            this.pageService.apiFacebookPagesPost({accessToken: page.access_token, avatar: page.picture.data.url, id: page.id, name: page.name}).subscribe(response => {
+                this.router.navigate(['/apps/chat']);
+            }, error => {
+                console.log(error)
+            })
         }
     }
 }
