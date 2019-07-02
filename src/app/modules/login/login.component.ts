@@ -73,7 +73,6 @@ export class LoginComponent implements OnInit {
      * On init
      */
     ngOnInit(): void {
-        this.splasScreen.show();
         if (this.authService.isLogin()) {
             this.token = sessionStorage.getItem(AuthConst.FB_TOKEN);
             this.userID = sessionStorage.getItem(AuthConst.USER_ID);
@@ -84,7 +83,7 @@ export class LoginComponent implements OnInit {
                 userID: this.userID
             });
         } else {
-            (window as any).fbAsyncInit = function (): void {
+            (window as any).fbAsyncInit = function(): void {
                 FB.init({
                     appId: environment.fbAppId,
                     cookie: true,
@@ -94,7 +93,7 @@ export class LoginComponent implements OnInit {
                 FB.AppEvents.logPageView();
             };
 
-            (function (d, s, id): void {
+            (function(d, s, id): void {
                 var js,
                     fjs = d.getElementsByTagName(s)[0];
                 if (d.getElementById(id)) {
@@ -142,6 +141,7 @@ export class LoginComponent implements OnInit {
     }
 
     prepareData(authResponse: AuthResponse): void {
+        this.splasScreen.show();
         sessionStorage.setItem(AuthConst.FB_TOKEN, authResponse.accessToken);
         sessionStorage.setItem(AuthConst.USER_ID, authResponse.userID);
         sessionStorage.setItem(AuthConst.EXPERIED_TIME, authResponse.expiresIn.toString());
