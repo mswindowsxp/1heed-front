@@ -84,7 +84,7 @@ export class LoginComponent implements OnInit {
                 userID: this.userID
             });
         } else {
-            (window as any).fbAsyncInit = function(): void {
+            (window as any).fbAsyncInit = function (): void {
                 FB.init({
                     appId: environment.fbAppId,
                     cookie: true,
@@ -94,7 +94,7 @@ export class LoginComponent implements OnInit {
                 FB.AppEvents.logPageView();
             };
 
-            (function(d, s, id): void {
+            (function (d, s, id): void {
                 var js,
                     fjs = d.getElementsByTagName(s)[0];
                 if (d.getElementById(id)) {
@@ -120,7 +120,7 @@ export class LoginComponent implements OnInit {
                     }
                 });
             },
-            { scope: 'email,manage_pages' }
+            { scope: 'email,manage_pages,pages_show_list,pages_messaging,public_profile' }
         );
     }
 
