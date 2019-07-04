@@ -10,8 +10,9 @@
  * Do not edit the class manually.
  */
 
-export interface SocialLoginRequest {
-    accessToken?: string;
-    userId?: string;
-    expires?: number;
+export interface Share { 
+    id?: string;
+    name?: string;
+    description?: string;
+    link?: string;
 }

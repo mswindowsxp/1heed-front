@@ -4,6 +4,7 @@ import { HttpClient } from '@angular/common/http';
 
 
 import { AuthenticationService } from './api/authentication.service';
+import { ConversationService } from './api/conversation.service';
 import { PageService } from './api/page.service';
 
 @NgModule({
@@ -12,6 +13,7 @@ import { PageService } from './api/page.service';
   exports:      [],
   providers: [
     AuthenticationService,
+    ConversationService,
     PageService ]
 })
 export class ApiModule {
