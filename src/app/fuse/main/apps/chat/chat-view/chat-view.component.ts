@@ -4,6 +4,7 @@ import { FusePerfectScrollbarDirective } from '@fuse/directives/fuse-perfect-scr
 import { ChatService } from 'app/fuse/main/apps/chat/chat.service';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
+import {Conversation} from '../../../../../core/http';
 
 @Component({
     selector: 'chat-view',
@@ -50,11 +51,12 @@ export class ChatViewComponent implements OnInit, OnDestroy, AfterViewInit {
      */
     ngOnInit(): void {
         this.user = this._chatService.user;
-        this._chatService.onChatSelected.pipe(takeUntil(this._unsubscribeAll)).subscribe(chatData => {
+        this._chatService.onChatSelected.pipe(takeUntil(this._unsubscribeAll)).subscribe((chatData: Conversation) => {
             if (chatData) {
+                console.log(chatData)
                 this.selectedChat = chatData;
-                this.contact = chatData.contact;
-                this.dialog = chatData.dialog;
+                // this.contact = chatData.contact;
+                this.dialog = chatData.;
                 this.readyToReply();
             }
         });

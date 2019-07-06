@@ -87,7 +87,7 @@ export class LoginComponent implements OnInit {
                 accessToken: this.token,
                 userID: this.userID
             });
-        } else {
+        }
             (window as any).fbAsyncInit = function(): void {
                 FB.init({
                     appId: environment.fbAppId,
@@ -109,7 +109,6 @@ export class LoginComponent implements OnInit {
                 js.src = 'https://connect.facebook.net/en_US/sdk.js';
                 fjs.parentNode.insertBefore(js, fjs);
             })(document, 'script', 'facebook-jssdk');
-        }
     }
 
     fbLogin(): void {

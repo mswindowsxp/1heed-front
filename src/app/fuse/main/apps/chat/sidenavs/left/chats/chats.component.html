@@ -112,21 +112,21 @@
 
             <button mat-button class="contact"
                     *ngFor="let chat of chats | filter: searchText"
-                    (click)="getChat(chat.id)" ngClass="{'unread':contact.unread}"
+                    (click)="getChat(chat.id)" ngClass="{'unread':chat.unread_count}"
                     [@animate]="{value:'*',params:{y:'100%'}}">
 
                 <div fxLayout="row" fxLayoutAlign="start center">
 
                     <div class="avatar-wrapper" fxFlex="0 1 auto" fxLayoutAlign="center center">
-                        <img class="avatar" [src]="contacts | getById:chat.id:'avatar'"
-                             alt="{{contacts | getById:chat.id:'name'}}"/>
+                        <img class="avatar" [src]="'//graph.facebook.com/' + chat.senders.data[0].id + '/picture'"
+                             alt="{{chat.senders.data[0].name}}"/>
                         <mat-icon class="s-16 status" [ngClass]="contacts | getById:chat.id:'status'"></mat-icon>
                     </div>
 
                     <div fxLayout="row" fxFlex>
 
                         <div class="pr-4" fxFlex fxLayout="column" fxLayoutAlign="center start">
-                            <div class="contact-name">{{contacts | getById:chat.id:'name'}}</div>
+                            <div class="contact-name">{{chat.senders.data[0].name}}</div>
                             <div class="contact-last-message">{{chat.messages.data[0].message}}</div>
                         </div>
 

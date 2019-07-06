@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { ActivatedRouteSnapshot, Resolve, RouterStateSnapshot } from '@angular/router';
 import { FuseUtils } from '@fuse/utils';
-import {ConversationResponse, ConversationService} from 'app/core/http';
+import {Conversation, ConversationResponse, ConversationService} from 'app/core/http';
 import { BehaviorSubject, Observable, Subject } from 'rxjs';
 
 @Injectable()
@@ -10,7 +10,7 @@ export class ChatService implements Resolve<any> {
     contacts: any[];
     chats: ConversationResponse;
     user: any;
-    onChatSelected: BehaviorSubject<any>;
+    onChatSelected: BehaviorSubject<Conversation>;
     onContactSelected: BehaviorSubject<any>;
     onChatsUpdated: Subject<any>;
     onUserUpdated: Subject<any>;
@@ -57,35 +57,21 @@ export class ChatService implements Resolve<any> {
      * @param contactId
      * @returns {Promise<any>}
      */
-    getChat(contactId): Promise<any> {
-        const chatItem = this.user.chatList.find(item => {
-            return item.contactId === contactId;
+    getChat(chatID): Promise<any> {
+        const chatItem = this.chats.data.find(item => {
+            return item.id === chatID;
         });
 
         // Create new chat, if it's not created yet.
         if (!chatItem) {
-            this.createNewChat(contactId).then(newChats => {
-                this.getChat(contactId);
+            this.createNewChat(chatID).then(newChats => {
+                this.getChat(chatID);
             });
             return;
         }
 
-        return new Promise((resolve, reject) => {
-            this._httpClient.get('api/chat-chats/' + chatItem.id).subscribe((response: any) => {
-                const chat = response;
-
-                const chatContact = this.contacts.find(contact => {
-                    return contact.id === contactId;
-                });
-
-                const chatData = {
-                    chatId: chat.id,
-                    dialog: chat.dialog,
-                    contact: chatContact
-                };
-
-                this.onChatSelected.next({ ...chatData });
-            }, reject);
+        return new Promise(() => {
+                this.onChatSelected.next(chatItem);
         });
     }
 

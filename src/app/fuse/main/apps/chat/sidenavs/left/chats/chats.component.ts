@@ -88,9 +88,8 @@ export class ChatChatsSidenavComponent implements OnInit, OnDestroy {
      *
      * @param contact
      */
-    getChat(contact): void {
-        this._chatService.getChat(contact);
-
+    getChat(chatID): void {
+        this._chatService.getChat(chatID);
         if (!this._observableMedia.isActive('gt-md')) {
             this._fuseMatSidenavHelperService.getSidenav('chat-left-sidenav').toggle();
         }
