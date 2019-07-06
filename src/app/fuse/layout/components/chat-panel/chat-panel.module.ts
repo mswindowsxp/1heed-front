@@ -9,8 +9,8 @@ import {
     MatTooltipModule
 } from '@angular/material';
 import { FuseSharedModule } from '@fuse/shared.module';
-import { ChatPanelComponent } from 'app/modules/chat-panel/chat-panel.component';
-import { ChatPanelService } from 'app/modules/chat-panel/chat-panel.service';
+import { ChatPanelComponent } from './chat-panel.component';
+import { ChatPanelService } from './chat-panel.service';
 
 @NgModule({
     declarations: [ChatPanelComponent],
