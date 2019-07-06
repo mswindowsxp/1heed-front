@@ -1,23 +1,21 @@
 import { Component, OnDestroy, OnInit, ViewEncapsulation } from '@angular/core';
 import { ObservableMedia } from '@angular/flex-layout';
-import { Subject } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
-
 import { fuseAnimations } from '@fuse/animations';
 import { FuseMatSidenavHelperService } from '@fuse/directives/fuse-mat-sidenav/fuse-mat-sidenav.service';
-
 import { ChatService } from 'app/fuse/main/apps/chat/chat.service';
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
+import {Conversation, ConversationResponse} from '../../../../../../../core/http';
 
 @Component({
-    selector     : 'chat-chats-sidenav',
-    templateUrl  : './chats.component.html',
-    styleUrls    : ['./chats.component.scss'],
+    selector: 'chat-chats-sidenav',
+    templateUrl: './chats.component.html',
+    styleUrls: ['./chats.component.scss'],
     encapsulation: ViewEncapsulation.None,
-    animations   : fuseAnimations
+    animations: fuseAnimations
 })
-export class ChatChatsSidenavComponent implements OnInit, OnDestroy
-{
-    chats: any[];
+export class ChatChatsSidenavComponent implements OnInit, OnDestroy {
+    chats: Conversation[];
     chatSearch: any;
     contacts: any[];
     searchText: string;
@@ -37,8 +35,7 @@ export class ChatChatsSidenavComponent implements OnInit, OnDestroy
         private _chatService: ChatService,
         private _fuseMatSidenavHelperService: FuseMatSidenavHelperService,
         public _observableMedia: ObservableMedia
-    )
-    {
+    ) {
         // Set the defaults
         this.chatSearch = {
             name: ''
@@ -56,30 +53,27 @@ export class ChatChatsSidenavComponent implements OnInit, OnDestroy
     /**
      * On init
      */
-    ngOnInit(): void
-    {
+    ngOnInit(): void {
         this.user = this._chatService.user;
-        this.chats = this._chatService.chats;
+        this.chats = this._chatService.chats.data;
         this.contacts = this._chatService.contacts;
+        console.log(this.user);
+        console.log(this.chats);
+        console.log(this.contacts);
 
-        this._chatService.onChatsUpdated
-            .pipe(takeUntil(this._unsubscribeAll))
-            .subscribe(updatedChats => {
-                this.chats = updatedChats;
-            });
+        this._chatService.onChatsUpdated.pipe(takeUntil(this._unsubscribeAll)).subscribe(updatedChats => {
+            this.chats = updatedChats;
+        });
 
-        this._chatService.onUserUpdated
-            .pipe(takeUntil(this._unsubscribeAll))
-            .subscribe(updatedUser => {
-                this.user = updatedUser;
-            });
+        this._chatService.onUserUpdated.pipe(takeUntil(this._unsubscribeAll)).subscribe(updatedUser => {
+            this.user = updatedUser;
+        });
     }
 
     /**
      * On destroy
      */
-    ngOnDestroy(): void
-    {
+    ngOnDestroy(): void {
         // Unsubscribe from all subscriptions
         this._unsubscribeAll.next();
         this._unsubscribeAll.complete();
@@ -94,12 +88,10 @@ export class ChatChatsSidenavComponent implements OnInit, OnDestroy
      *
      * @param contact
      */
-    getChat(contact): void
-    {
+    getChat(contact): void {
         this._chatService.getChat(contact);
 
-        if ( !this._observableMedia.isActive('gt-md') )
-        {
+        if (!this._observableMedia.isActive('gt-md')) {
             this._fuseMatSidenavHelperService.getSidenav('chat-left-sidenav').toggle();
         }
     }
@@ -109,8 +101,7 @@ export class ChatChatsSidenavComponent implements OnInit, OnDestroy
      *
      * @param status
      */
-    setUserStatus(status): void
-    {
+    setUserStatus(status): void {
         this._chatService.setUserStatus(status);
     }
 
@@ -119,16 +110,14 @@ export class ChatChatsSidenavComponent implements OnInit, OnDestroy
      *
      * @param view
      */
-    changeLeftSidenavView(view): void
-    {
+    changeLeftSidenavView(view): void {
         this._chatService.onLeftSidenavViewChanged.next(view);
     }
 
     /**
      * Logout
      */
-    logout(): void
-    {
+    logout(): void {
         console.log('logout triggered');
     }
 }

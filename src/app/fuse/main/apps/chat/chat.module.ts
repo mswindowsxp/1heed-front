@@ -14,8 +14,6 @@ import { ChatViewComponent } from 'app/fuse/main/apps/chat/chat-view/chat-view.c
 import { ChatChatsSidenavComponent } from 'app/fuse/main/apps/chat/sidenavs/left/chats/chats.component';
 import { ChatUserSidenavComponent } from 'app/fuse/main/apps/chat/sidenavs/left/user/user.component';
 import { ChatLeftSidenavComponent } from 'app/fuse/main/apps/chat/sidenavs/left/left.component';
-import { ChatRightSidenavComponent } from 'app/fuse/main/apps/chat/sidenavs/right/right.component';
-import { ChatContactSidenavComponent } from 'app/fuse/main/apps/chat/sidenavs/right/contact/contact.component';
 
 const routes: Routes = [
     {
@@ -35,13 +33,10 @@ const routes: Routes = [
         ChatStartComponent,
         ChatChatsSidenavComponent,
         ChatUserSidenavComponent,
-        ChatLeftSidenavComponent,
-        ChatRightSidenavComponent,
-        ChatContactSidenavComponent
+        ChatLeftSidenavComponent
     ],
     imports     : [
         RouterModule.forChild(routes),
-
         MatButtonModule,
         MatCardModule,
         MatFormFieldModule,
@@ -52,7 +47,6 @@ const routes: Routes = [
         MatRadioModule,
         MatSidenavModule,
         MatToolbarModule,
-
         FuseSharedModule
     ],
     providers   : [

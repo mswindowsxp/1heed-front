@@ -1,7 +1,6 @@
 import { AfterViewInit, Component, OnDestroy, OnInit, ViewChild, ViewChildren, ViewEncapsulation } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { FusePerfectScrollbarDirective } from '@fuse/directives/fuse-perfect-scrollbar/fuse-perfect-scrollbar.directive';
-import { ConversationService } from 'app/core/http';
 import { ChatService } from 'app/fuse/main/apps/chat/chat.service';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
@@ -37,7 +36,7 @@ export class ChatViewComponent implements OnInit, OnDestroy, AfterViewInit {
      *
      * @param {ChatService} _chatService
      */
-    constructor(private _chatService: ChatService, private readonly conversationService: ConversationService) {
+    constructor(private _chatService: ChatService) {
         // Set the private defaults
         this._unsubscribeAll = new Subject();
     }
@@ -58,9 +57,6 @@ export class ChatViewComponent implements OnInit, OnDestroy, AfterViewInit {
                 this.dialog = chatData.dialog;
                 this.readyToReply();
             }
-        });
-        this.conversationService.apiConversationGet().subscribe(data => {
-            console.log(data);
         });
     }
 

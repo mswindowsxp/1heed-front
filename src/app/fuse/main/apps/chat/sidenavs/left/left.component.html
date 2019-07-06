@@ -1,12 +1,9 @@
 <div [ngSwitch]="view" class="views">
-    <chat-chats-sidenav class="view"
-                        *ngSwitchCase="'chats'"
-                        [@slideInRight]>
-    </chat-chats-sidenav>
+    <chat-chats-sidenav class="view" *ngSwitchCase="'chats'" [@slideInRight]> </chat-chats-sidenav>
 
-    <chat-user-sidenav class="view"
+    <!-- <chat-user-sidenav class="view"
                        *ngSwitchCase="'user'"
                        [@slideInLeft]
                        fusePerfectScrollbar>
-    </chat-user-sidenav>
+    </chat-user-sidenav> -->
 </div>
