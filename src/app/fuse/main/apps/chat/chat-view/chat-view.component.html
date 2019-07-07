@@ -22,17 +22,19 @@
 
                     <div class="avatar-wrapper">
 
-                        <img [src]="contact.avatar"
+                        <img [src]="'//graph.facebook.com/' + selectedChat.senders.data[0].id + '/picture'"
                              class="avatar"
-                             alt="{{contact.name}}"/>
-
-                        <mat-icon class="s-16 status"
-                                  [ngClass]="contact.status">
-                        </mat-icon>
+                             alt="{{selectedChat.senders.data[0].name}}"/>
+                                                <mat-icon class="s-16 status"
+                                                          [ngClass]="'active'">
+                                                </mat-icon>
+<!--                        <mat-icon class="s-16 status"-->
+<!--                                  [ngClass]="contact.status">-->
+<!--                        </mat-icon>-->
                     </div>
 
                     <div class="chat-contact-name">
-                        {{contact.name}}
+                        {{selectedChat.senders.data[0].name}}
                     </div>
 
                 </div>
@@ -62,21 +64,18 @@
         <div class="chat-messages">
 
             <!-- MESSAGE -->
-            <div *ngFor="let message of dialog; let i = index" class="message-row"
-                 [ngClass]="{
-                            'me': message.who === user.id,
-                            'contact': message.who !== user.id,
-                            'first-of-group': isFirstMessageOfGroup(message, i),
-                            'last-of-group': isLastMessageOfGroup(message, i)
-                            }">
-
-                <img *ngIf="shouldShowContactAvatar(message, i)"
-                     src="{{contact.avatar}}"
+                <div *ngFor="let data of dialog.messages.data; let i = index" class="message-row"
+                             [ngClass]="{'me': dialog.senders.data[1].id !== data.to.data[0].id,
+                                        'contact': dialog.senders.data[0].id === data.to.data[0].id,
+                                        'first-of-group': isFirstMessageOfGroup(data, i),
+                                        'last-of-group': isLastMessageOfGroup(data, i)}">
+                <img *ngIf="shouldShowContactAvatar(data, i, dialog.senders.data[1].id)"
+                     src="'//graph.facebook.com/' + selectedChat.senders.data[0].id + '/picture'"
                      class="avatar">
 
                 <div class="bubble">
-                    <div class="message">{{message.message}}</div>
-                    <div class="time secondary-text">{{message.time | date:'short'}}</div>
+                    <div class="message">{{data.message}}</div>
+                    <div class="time secondary-text">{{data.created_time | date:'short'}}</div>
                 </div>
 
             </div>

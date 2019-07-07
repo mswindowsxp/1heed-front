@@ -15,10 +15,10 @@ import {Conversation} from '../../../../../core/http';
 export class ChatViewComponent implements OnInit, OnDestroy, AfterViewInit {
     user: any;
     chat: any;
-    dialog: any;
+    dialog: Conversation;
     contact: any;
     replyInput: any;
-    selectedChat: any;
+    selectedChat: Conversation;
 
     @ViewChild(FusePerfectScrollbarDirective)
     directiveScroll: FusePerfectScrollbarDirective;
@@ -53,10 +53,9 @@ export class ChatViewComponent implements OnInit, OnDestroy, AfterViewInit {
         this.user = this._chatService.user;
         this._chatService.onChatSelected.pipe(takeUntil(this._unsubscribeAll)).subscribe((chatData: Conversation) => {
             if (chatData) {
-                console.log(chatData)
                 this.selectedChat = chatData;
                 // this.contact = chatData.contact;
-                this.dialog = chatData.;
+                this.dialog = chatData;
                 this.readyToReply();
             }
         });
@@ -90,9 +89,9 @@ export class ChatViewComponent implements OnInit, OnDestroy, AfterViewInit {
      * @param i
      * @returns {boolean}
      */
-    shouldShowContactAvatar(message, i): boolean {
+    shouldShowContactAvatar(message: any, i, userID: string): boolean {
         return (
-            message.who === this.contact.id && ((this.dialog[i + 1] && this.dialog[i + 1].who !== this.contact.id) || !this.dialog[i + 1])
+           ((this.dialog.messages.data[i - 1] && this.dialog.messages.data[i - 1].from.id !== message.from.id) || !this.dialog.messages.data[i - 1])
         );
     }
 
@@ -104,7 +103,7 @@ export class ChatViewComponent implements OnInit, OnDestroy, AfterViewInit {
      * @returns {boolean}
      */
     isFirstMessageOfGroup(message, i): boolean {
-        return i === 0 || (this.dialog[i - 1] && this.dialog[i - 1].who !== message.who);
+        return i === 0 || (this.dialog.messages.data[i - 1] && this.dialog.messages.data[i - 1].from.id !== message.from.id);
     }
 
     /**
@@ -115,7 +114,7 @@ export class ChatViewComponent implements OnInit, OnDestroy, AfterViewInit {
      * @returns {boolean}
      */
     isLastMessageOfGroup(message, i): boolean {
-        return i === this.dialog.length - 1 || (this.dialog[i + 1] && this.dialog[i + 1].who !== message.who);
+        return i === this.dialog.messages.data.length - 1 || (this.dialog.messages.data[i + 1] && this.dialog.messages.data[i + 1].from.id !== message.from.id);
     }
 
     /**
@@ -164,28 +163,28 @@ export class ChatViewComponent implements OnInit, OnDestroy, AfterViewInit {
      * Reply
      */
     reply(event): void {
-        event.preventDefault();
-
-        if (!this.replyForm.form.value.message) {
-            return;
-        }
-
-        // Message
-        const message = {
-            who: this.user.id,
-            message: this.replyForm.form.value.message,
-            time: new Date().toISOString()
-        };
-
-        // Add the message to the chat
-        this.dialog.push(message);
-
-        // Reset the reply form
-        this.replyForm.reset();
-
-        // Update the server
-        this._chatService.updateDialog(this.selectedChat.chatId, this.dialog).then(response => {
-            this.readyToReply();
-        });
+        // event.preventDefault();
+        //
+        // if (!this.replyForm.form.value.message) {
+        //     return;
+        // }
+        //
+        // // Message
+        // const message = {
+        //     who: this.user.id,
+        //     message: this.replyForm.form.value.message,
+        //     time: new Date().toISOString()
+        // };
+        //
+        // // Add the message to the chat
+        // this.dialog.push(message);
+        //
+        // // Reset the reply form
+        // this.replyForm.reset();
+        //
+        // // Update the server
+        // this._chatService.updateDialog(this.selectedChat.chatId, this.dialog).then(response => {
+        //     this.readyToReply();
+        // });
     }
 }

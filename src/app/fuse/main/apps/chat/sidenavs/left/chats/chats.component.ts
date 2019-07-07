@@ -57,10 +57,6 @@ export class ChatChatsSidenavComponent implements OnInit, OnDestroy {
         this.user = this._chatService.user;
         this.chats = this._chatService.chats.data;
         this.contacts = this._chatService.contacts;
-        console.log(this.user);
-        console.log(this.chats);
-        console.log(this.contacts);
-
         this._chatService.onChatsUpdated.pipe(takeUntil(this._unsubscribeAll)).subscribe(updatedChats => {
             this.chats = updatedChats;
         });
