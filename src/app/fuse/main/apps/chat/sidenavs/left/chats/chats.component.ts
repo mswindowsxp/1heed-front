@@ -3,9 +3,10 @@ import { ObservableMedia } from '@angular/flex-layout';
 import { fuseAnimations } from '@fuse/animations';
 import { FuseMatSidenavHelperService } from '@fuse/directives/fuse-mat-sidenav/fuse-mat-sidenav.service';
 import { ChatService } from 'app/fuse/main/apps/chat/chat.service';
+import { AuthConst } from 'app/shared/constants/auth.const';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
-import {Conversation, ConversationResponse} from '../../../../../../../core/http';
+import { Conversation } from '../../../../../../../core/http';
 
 @Component({
     selector: 'chat-chats-sidenav',
@@ -20,6 +21,7 @@ export class ChatChatsSidenavComponent implements OnInit, OnDestroy {
     contacts: any[];
     searchText: string;
     user: any;
+    pageToken: string;
 
     // Private
     private _unsubscribeAll: Subject<any>;
@@ -57,6 +59,7 @@ export class ChatChatsSidenavComponent implements OnInit, OnDestroy {
         this.user = this._chatService.user;
         this.chats = this._chatService.chats.data;
         this.contacts = this._chatService.contacts;
+        this.pageToken = sessionStorage.getItem(AuthConst.PAGE_TOKEN);
         this._chatService.onChatsUpdated.pipe(takeUntil(this._unsubscribeAll)).subscribe(updatedChats => {
             this.chats = updatedChats;
         });

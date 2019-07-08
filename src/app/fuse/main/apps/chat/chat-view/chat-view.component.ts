@@ -2,9 +2,10 @@ import { AfterViewInit, Component, OnDestroy, OnInit, ViewChild, ViewChildren, V
 import { NgForm } from '@angular/forms';
 import { FusePerfectScrollbarDirective } from '@fuse/directives/fuse-perfect-scrollbar/fuse-perfect-scrollbar.directive';
 import { ChatService } from 'app/fuse/main/apps/chat/chat.service';
+import { AuthConst } from 'app/shared/constants/auth.const';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
-import {Conversation} from '../../../../../core/http';
+import { Conversation, Message } from '../../../../../core/http';
 
 @Component({
     selector: 'chat-view',
@@ -19,7 +20,8 @@ export class ChatViewComponent implements OnInit, OnDestroy, AfterViewInit {
     contact: any;
     replyInput: any;
     selectedChat: Conversation;
-
+    pageToken: string;
+    avarSrc: string;
     @ViewChild(FusePerfectScrollbarDirective)
     directiveScroll: FusePerfectScrollbarDirective;
 
@@ -50,6 +52,7 @@ export class ChatViewComponent implements OnInit, OnDestroy, AfterViewInit {
      * On init
      */
     ngOnInit(): void {
+        this.pageToken = sessionStorage.getItem(AuthConst.PAGE_TOKEN);
         this.user = this._chatService.user;
         this._chatService.onChatSelected.pipe(takeUntil(this._unsubscribeAll)).subscribe((chatData: Conversation) => {
             if (chatData) {
@@ -91,8 +94,13 @@ export class ChatViewComponent implements OnInit, OnDestroy, AfterViewInit {
      */
     shouldShowContactAvatar(message: any, i, userID: string): boolean {
         return (
-           ((this.dialog.messages.data[i - 1] && this.dialog.messages.data[i - 1].from.id !== message.from.id) || !this.dialog.messages.data[i - 1])
+            message.from.id !== userID &&
+            ((this.dialog.messages.data[i + 1] && this.dialog.messages.data[i + 1].from.id !== message.from.id) ||
+                !this.dialog.messages.data[i + 1])
         );
+        // (this.dialog[i + 1] && this.dialog[i + 1].who !== this.contact.id) || !this.dialog[i + 1];
+
+        // return !this.dialog.messages.data[i - 1] || (this.dialog.messages.data[i - 1]. && );
     }
 
     /**
@@ -114,7 +122,10 @@ export class ChatViewComponent implements OnInit, OnDestroy, AfterViewInit {
      * @returns {boolean}
      */
     isLastMessageOfGroup(message, i): boolean {
-        return i === this.dialog.messages.data.length - 1 || (this.dialog.messages.data[i + 1] && this.dialog.messages.data[i + 1].from.id !== message.from.id);
+        return (
+            i === this.dialog.messages.data.length - 1 ||
+            (this.dialog.messages.data[i + 1] && this.dialog.messages.data[i + 1].from.id !== message.from.id)
+        );
     }
 
     /**
@@ -186,5 +197,30 @@ export class ChatViewComponent implements OnInit, OnDestroy, AfterViewInit {
         // this._chatService.updateDialog(this.selectedChat.chatId, this.dialog).then(response => {
         //     this.readyToReply();
         // });
+    }
+
+    isImageEmbed(data: Message) {
+        return (
+            data &&
+            data.shares &&
+            data.shares.data[0] &&
+            data.shares.data[0].link &&
+            (data.shares.data[0].link.indexOf('.png') !== -1 || data.shares.data[0].link.indexOf('.jpg') !== -1)
+        );
+    }
+    isAttachment(data: Message) {
+        return data && data.attachments && data.attachments.data[0];
+    }
+
+    isImage(attachment: any) {
+        return attachment && attachment.mime_type.indexOf('image') !== -1;
+    }
+
+    isFile(attachment: any) {
+        return attachment && attachment.mime_type.indexOf('image') === -1 && attachment.mime_type.indexOf('video') === -1;
+    }
+
+    isVideoEmbed(attachment: any) {
+        return attachment && attachment.mime_type.indexOf('video') !== -1;
     }
 }

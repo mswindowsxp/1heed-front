@@ -1,42 +1,47 @@
 <!-- CHAT -->
 <div class="chat" fxFlex fxLayout="column">
-
     <!-- CHAT TOOLBAR -->
     <mat-toolbar class="chat-toolbar">
-
         <div fxFlex fxLayout="row" fxLayoutAlign="space-between center">
-
             <div fxLayout="row" fxLayoutAlign="start center">
-
                 <!-- RESPONSIVE CHATS BUTTON-->
-                <button mat-icon-button fxHide.gt-md class="responsive-chats-button mr-16"
-                        fuseMatSidenavToggler="chat-left-sidenav"
-                        aria-label="chats button">
+                <button
+                    mat-icon-button
+                    fxHide.gt-md
+                    class="responsive-chats-button mr-16"
+                    fuseMatSidenavToggler="chat-left-sidenav"
+                    aria-label="chats button"
+                >
                     <mat-icon>chat</mat-icon>
                 </button>
                 <!-- / RESPONSIVE CHATS BUTTON-->
 
                 <!-- CHAT CONTACT-->
-                <div class="chat-contact" fxLayout="row" fxLayoutAlign="start center"
-                     fuseMatSidenavToggler="chat-right-sidenav" (click)="selectContact()">
-
+                <div
+                    class="chat-contact"
+                    fxLayout="row"
+                    fxLayoutAlign="start center"
+                    fuseMatSidenavToggler="chat-right-sidenav"
+                    (click)="selectContact()"
+                >
                     <div class="avatar-wrapper">
-
-                        <img [src]="'//graph.facebook.com/' + selectedChat.senders.data[0].id + '/picture'"
-                             class="avatar"
-                             alt="{{selectedChat.senders.data[0].name}}"/>
-                                                <mat-icon class="s-16 status"
-                                                          [ngClass]="'active'">
-                                                </mat-icon>
-<!--                        <mat-icon class="s-16 status"-->
-<!--                                  [ngClass]="contact.status">-->
-<!--                        </mat-icon>-->
+                        <img src="assets/images/avatars/alice.jpg" class="avatar" alt="{{ selectedChat.senders.data[0].name }}" />
+                        <!-- <img
+                            [src]="
+                                'https://graph.facebook.com/' + chat.senders.data[0].id + '/picture?type=square&access_token=' + pageToken
+                            "
+                            class="avatar"
+                            alt="{{ selectedChat.senders.data[0].name }}"
+                        /> -->
+                        <mat-icon class="s-16 status" [ngClass]="'active'"> </mat-icon>
+                        <!--                        <mat-icon class="s-16 status"-->
+                        <!--                                  [ngClass]="contact.status">-->
+                        <!--                        </mat-icon>-->
                     </div>
 
                     <div class="chat-contact-name">
-                        {{selectedChat.senders.data[0].name}}
+                        {{ selectedChat.senders.data[0].name }}
                     </div>
-
                 </div>
                 <!-- / CHAT CONTACT-->
             </div>
@@ -52,68 +57,92 @@
                     </button>
                 </mat-menu>
             </div>
-
         </div>
     </mat-toolbar>
     <!-- / CHAT TOOLBAR -->
 
     <!-- CHAT CONTENT -->
-    <div id="chat-content" fxFlex="1 1 auto"  fusePerfectScrollbar>
-
+    <div id="chat-content" fxFlex="1 1 auto" fusePerfectScrollbar>
         <!-- CHAT MESSAGES -->
         <div class="chat-messages">
-
             <!-- MESSAGE -->
-                <div *ngFor="let data of dialog.messages.data; let i = index" class="message-row"
-                             [ngClass]="{'me': dialog.senders.data[1].id !== data.to.data[0].id,
-                                        'contact': dialog.senders.data[0].id === data.to.data[0].id,
-                                        'first-of-group': isFirstMessageOfGroup(data, i),
-                                        'last-of-group': isLastMessageOfGroup(data, i)}">
-                <img *ngIf="shouldShowContactAvatar(data, i, dialog.senders.data[1].id)"
-                     src="'//graph.facebook.com/' + selectedChat.senders.data[0].id + '/picture'"
-                     class="avatar">
-
-                <div class="bubble">
-                    <div class="message">{{data.message}}</div>
-                    <div class="time secondary-text">{{data.created_time | date:'short'}}</div>
+            <div
+                *ngFor="let data of dialog.messages.data; let i = index"
+                class="message-row"
+                [ngClass]="{
+                    me: dialog.senders.data[1].id !== data.to.data[0].id,
+                    contact: dialog.senders.data[1].id === data.to.data[0].id,
+                    'first-of-group': isFirstMessageOfGroup(data, i),
+                    'last-of-group': isLastMessageOfGroup(data, i)
+                }"
+            >
+                <img
+                    *ngIf="shouldShowContactAvatar(data, i, dialog.senders.data[1].id)"
+                    [src]="'https://graph.facebook.com/' + data.from.id + '/picture?type=square&access_token=' + pageToken"
+                    class="avatar"
+                />
+                <div class="bubble" *ngIf="data.message">
+                    <div class="message">{{ data.message }}</div>
+                    <div class="time secondary-text">{{ data.created_time | date: 'short' }}</div>
+                </div>
+                <div class="bubble" *ngIf="data.shares && data.shares.data[0].name && data.shares.data[0].link">
+                    <div class="message">{{ data.shares.data[0].name }}</div>
                 </div>
 
+                <div class="bubble" *ngIf="isImageEmbed(data)">
+                    <div class="message">
+                        <img [src]="data.shares.data[0].link" />
+                    </div>
+                    <div class="time secondary-text">{{ data.created_time | date: 'short' }}</div>
+                </div>
+                <div class="bubble" *ngIf="isAttachment(data)">
+                    <div class="message" *ngFor="let attament of data.attachments.data">
+                        <img *ngIf="isImage(attament)" [src]="attament.image_data.preview_url" class="img-attactment" />
+                        <a *ngIf="isVideoEmbed(attament)" class="img-attactment" [href]="attament.video_data.url"
+                            ><img [src]="attament.video_data.preview_url" class="img-attactment"
+                        /></a>
+                        <a *ngIf="isFile(attament)" class="img-attactment">{{ attament.name }}</a>
+                    </div>
+                    <div class="time secondary-text">{{ data.created_time | date: 'short' }}</div>
+                </div>
             </div>
             <!-- / MESSAGE -->
-
         </div>
         <!-- CHAT MESSAGES -->
-
     </div>
     <!-- / CHAT CONTENT -->
 
     <!-- CHAT FOOTER -->
     <div class="chat-footer" fxFlex="0 0 auto" fxLayout="column">
-
         <!-- REPLY FORM -->
         <div class="reply-form" fxFlex="0 0 auto" fxLayout="row" fxLayoutAlign="center center">
-
-            <form #replyForm="ngForm"
-                  (ngSubmit)="reply($event)"
-                  (keydown.enter)="reply($event)"
-                  fxFlex fxLayout="row" fxLayoutAlign="start center">
-
+            <form
+                #replyForm="ngForm"
+                (ngSubmit)="reply($event)"
+                (keydown.enter)="reply($event)"
+                fxFlex
+                fxLayout="row"
+                fxLayoutAlign="start center"
+            >
                 <mat-form-field class="message-text" fxFlex floatLabel="never" appearance="standard">
-                    <textarea matInput #replyInput placeholder="Type your message"
-                              ngModel name="message" [rows]="1" [matTextareaAutosize]="true"></textarea>
+                    <textarea
+                        matInput
+                        #replyInput
+                        placeholder="Type your message"
+                        ngModel
+                        name="message"
+                        [rows]="1"
+                        [matTextareaAutosize]="true"
+                    ></textarea>
                 </mat-form-field>
 
                 <button class="send-message-button" mat-icon-button type="submit" aria-label="Send message">
                     <mat-icon class="secondary-text">send</mat-icon>
                 </button>
-
             </form>
-
         </div>
         <!-- / REPLY FORM -->
-
     </div>
     <!-- / CHAT FOOTER-->
-
 </div>
 <!-- / CHAT -->

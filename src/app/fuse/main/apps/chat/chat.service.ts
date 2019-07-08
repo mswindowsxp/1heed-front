@@ -1,8 +1,9 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { ActivatedRouteSnapshot, Resolve, RouterStateSnapshot } from '@angular/router';
+import { FuseSplashScreenService } from '@fuse/services/splash-screen.service';
 import { FuseUtils } from '@fuse/utils';
-import {Conversation, ConversationResponse, ConversationService} from 'app/core/http';
+import { Conversation, ConversationResponse, ConversationService } from 'app/core/http';
 import { BehaviorSubject, Observable, Subject } from 'rxjs';
 
 @Injectable()
@@ -23,7 +24,11 @@ export class ChatService implements Resolve<any> {
      * @param {HttpClient} _httpClient
      * @param {ConversationService} conversationService
      */
-    constructor(private _httpClient: HttpClient, private readonly conversationService: ConversationService) {
+    constructor(
+        private _httpClient: HttpClient,
+        private readonly conversationService: ConversationService,
+        private readonly splashScreenService: FuseSplashScreenService
+    ) {
         // Set the defaults
         this.onChatSelected = new BehaviorSubject(null);
         this.onContactSelected = new BehaviorSubject(null);
@@ -46,6 +51,7 @@ export class ChatService implements Resolve<any> {
                 this.contacts = contacts;
                 this.chats = chats;
                 this.user = user;
+                this.splashScreenService.hide();
                 resolve();
             }, reject);
         });
@@ -71,7 +77,7 @@ export class ChatService implements Resolve<any> {
         }
 
         return new Promise(() => {
-                this.onChatSelected.next(chatItem);
+            this.onChatSelected.next(chatItem);
         });
     }
 

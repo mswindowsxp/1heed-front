@@ -88,27 +88,27 @@ export class LoginComponent implements OnInit {
                 userID: this.userID
             });
         }
-            (window as any).fbAsyncInit = function(): void {
-                FB.init({
-                    appId: environment.fbAppId,
-                    cookie: true,
-                    xfbml: true,
-                    version: environment.fbApiVer
-                });
-                FB.AppEvents.logPageView();
-            };
+        (window as any).fbAsyncInit = function(): void {
+            FB.init({
+                appId: environment.fbAppId,
+                cookie: true,
+                xfbml: true,
+                version: environment.fbApiVer
+            });
+            FB.AppEvents.logPageView();
+        };
 
-            (function(d, s, id): void {
-                var js,
-                    fjs: any = d.getElementsByTagName(s)[0];
-                if (d.getElementById(id)) {
-                    return;
-                }
-                js = d.createElement(s);
-                js.id = id;
-                js.src = 'https://connect.facebook.net/en_US/sdk.js';
-                fjs.parentNode.insertBefore(js, fjs);
-            })(document, 'script', 'facebook-jssdk');
+        (function(d, s, id): void {
+            var js,
+                fjs: any = d.getElementsByTagName(s)[0];
+            if (d.getElementById(id)) {
+                return;
+            }
+            js = d.createElement(s);
+            js.id = id;
+            js.src = 'https://connect.facebook.net/en_US/sdk.js';
+            fjs.parentNode.insertBefore(js, fjs);
+        })(document, 'script', 'facebook-jssdk');
     }
 
     fbLogin(): void {
@@ -168,18 +168,23 @@ export class LoginComponent implements OnInit {
     }
 
     chosingPage(page: Data): void {
+        this.splasScreen.show();
         if (this.authService.isLogin()) {
             this.pageService
                 .apiFacebookPagesPost({ accessToken: page.access_token, avatar: page.picture.data.url, id: page.id, name: page.name })
                 .pipe(takeUntil(this._unsubscribeAll))
                 .subscribe(
                     () => {
+                        sessionStorage.setItem(AuthConst.PAGE_TOKEN, page.access_token);
                         this.router.navigate(['/apps/chat']);
                     },
                     error => {
                         console.log(error);
+                        this.splasScreen.hide();
                     }
                 );
+        } else {
+            this.splasScreen.hide();
         }
     }
 }
