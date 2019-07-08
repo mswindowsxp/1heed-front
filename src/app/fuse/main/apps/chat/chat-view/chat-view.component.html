@@ -25,14 +25,16 @@
                     (click)="selectContact()"
                 >
                     <div class="avatar-wrapper">
-                        <img src="assets/images/avatars/alice.jpg" class="avatar" alt="{{ selectedChat.senders.data[0].name }}" />
-                        <!-- <img
+                        <img
                             [src]="
-                                'https://graph.facebook.com/' + chat.senders.data[0].id + '/picture?type=square&access_token=' + pageToken
+                                'https://graph.facebook.com/' +
+                                selectedChat.senders.data[0].id +
+                                '/picture?type=square&access_token=' +
+                                pageToken
                             "
                             class="avatar"
                             alt="{{ selectedChat.senders.data[0].name }}"
-                        /> -->
+                        />
                         <mat-icon class="s-16 status" [ngClass]="'active'"> </mat-icon>
                         <!--                        <mat-icon class="s-16 status"-->
                         <!--                                  [ngClass]="contact.status">-->
