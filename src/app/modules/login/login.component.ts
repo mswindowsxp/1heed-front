@@ -5,7 +5,8 @@ import { FuseConfigService } from '@fuse/services/config.service';
 import { FuseSplashScreenService } from '@fuse/services/splash-screen.service';
 import { Data } from 'app/shared/models';
 import { FacebookService } from 'app/shared/services/facebook.service';
-import { forkJoin, Observable } from 'rxjs';
+import { forkJoin, Observable, Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 import { AuthenticationService, PageService } from '../../core/http';
 import { AuthenticateService } from '../../shared/services/authenticate.service';
 import { environment } from './../../../environments/environment';
@@ -27,6 +28,7 @@ export class LoginComponent implements OnInit {
     token: string;
     userID: string;
     experiedIn: number;
+    private _unsubscribeAll: Subject<any>;
     /**
      *
      * @param _fuseConfigService
@@ -40,7 +42,7 @@ export class LoginComponent implements OnInit {
         private _fuseConfigService: FuseConfigService,
         private readonly authService: AuthenticateService,
         private readonly router: Router,
-        private ngZone: NgZone,
+        private readonly ngZone: NgZone,
         private readonly authenticateService: AuthenticationService,
         private readonly facebookService: FacebookService,
         private readonly splasScreen: FuseSplashScreenService,
@@ -63,6 +65,8 @@ export class LoginComponent implements OnInit {
                 }
             }
         };
+        // Set the private defaults
+        this._unsubscribeAll = new Subject();
     }
 
     // -----------------------------------------------------------------------------------------------------
@@ -73,7 +77,8 @@ export class LoginComponent implements OnInit {
      * On init
      */
     ngOnInit(): void {
-        if (this.authService.isLogin()) {
+        this.token = sessionStorage.getItem(AuthConst.FB_TOKEN);
+        if (this.authService.isLogin() || this.token) {
             this.token = sessionStorage.getItem(AuthConst.FB_TOKEN);
             this.userID = sessionStorage.getItem(AuthConst.USER_ID);
             this.experiedIn = parseInt(sessionStorage.getItem(AuthConst.EXPERIED_TIME), 0);
@@ -82,29 +87,28 @@ export class LoginComponent implements OnInit {
                 accessToken: this.token,
                 userID: this.userID
             });
-        } else {
-            (window as any).fbAsyncInit = function(): void {
-                FB.init({
-                    appId: environment.fbAppId,
-                    cookie: true,
-                    xfbml: true,
-                    version: environment.fbApiVer
-                });
-                FB.AppEvents.logPageView();
-            };
-
-            (function(d, s, id): void {
-                var js,
-                    fjs = d.getElementsByTagName(s)[0];
-                if (d.getElementById(id)) {
-                    return;
-                }
-                js = d.createElement(s);
-                js.id = id;
-                js.src = 'https://connect.facebook.net/en_US/sdk.js';
-                fjs.parentNode.insertBefore(js, fjs);
-            })(document, 'script', 'facebook-jssdk');
         }
+        (window as any).fbAsyncInit = function(): void {
+            FB.init({
+                appId: environment.fbAppId,
+                cookie: true,
+                xfbml: true,
+                version: environment.fbApiVer
+            });
+            FB.AppEvents.logPageView();
+        };
+
+        (function(d, s, id): void {
+            var js,
+                fjs: any = d.getElementsByTagName(s)[0];
+            if (d.getElementById(id)) {
+                return;
+            }
+            js = d.createElement(s);
+            js.id = id;
+            js.src = 'https://connect.facebook.net/en_US/sdk.js';
+            fjs.parentNode.insertBefore(js, fjs);
+        })(document, 'script', 'facebook-jssdk');
     }
 
     fbLogin(): void {
@@ -145,34 +149,42 @@ export class LoginComponent implements OnInit {
         sessionStorage.setItem(AuthConst.FB_TOKEN, authResponse.accessToken);
         sessionStorage.setItem(AuthConst.USER_ID, authResponse.userID);
         sessionStorage.setItem(AuthConst.EXPERIED_TIME, authResponse.expiresIn.toString());
-        this.getPagesManage(authResponse).subscribe(
-            data => {
-                this.splasScreen.hide();
-                this.isLogin = true;
-                this.userInformation = data[0];
-                this.widgets = data[1].data;
-                this.authService.login();
-                sessionStorage.setItem(AuthConst.TOKEN, data[0].token);
-                sessionStorage.setItem(AuthConst.REFRESH_TOKEN, data[0].refreshToken);
-            },
-            error => {
-                this.splasScreen.hide();
-            }
-        );
+        this.getPagesManage(authResponse)
+            .pipe(takeUntil(this._unsubscribeAll))
+            .subscribe(
+                data => {
+                    this.splasScreen.hide();
+                    this.isLogin = true;
+                    this.userInformation = data[0];
+                    this.widgets = data[1].data;
+                    this.authService.login();
+                    sessionStorage.setItem(AuthConst.TOKEN, data[0].token);
+                    sessionStorage.setItem(AuthConst.REFRESH_TOKEN, data[0].refreshToken);
+                },
+                error => {
+                    this.splasScreen.hide();
+                }
+            );
     }
 
     chosingPage(page: Data): void {
+        this.splasScreen.show();
         if (this.authService.isLogin()) {
             this.pageService
                 .apiFacebookPagesPost({ accessToken: page.access_token, avatar: page.picture.data.url, id: page.id, name: page.name })
+                .pipe(takeUntil(this._unsubscribeAll))
                 .subscribe(
-                    response => {
+                    () => {
+                        sessionStorage.setItem(AuthConst.PAGE_TOKEN, page.access_token);
                         this.router.navigate(['/apps/chat']);
                     },
                     error => {
                         console.log(error);
+                        this.splasScreen.hide();
                     }
                 );
+        } else {
+            this.splasScreen.hide();
         }
     }
 }

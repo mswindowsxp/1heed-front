@@ -10,8 +10,12 @@
  * Do not edit the class manually.
  */
 
-export interface SocialLoginRequest {
-    accessToken?: string;
-    userId?: string;
-    expires?: number;
+export interface VideoData {
+    width?: number;
+    height?: number;
+    length?: number;
+    url?: string;
+    previewUrl?: string;
+    videoType?: number;
+    rotation?: number;
 }

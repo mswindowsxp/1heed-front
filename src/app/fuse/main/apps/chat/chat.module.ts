@@ -1,21 +1,25 @@
 import { NgModule } from '@angular/core';
-import { RouterModule, Routes } from '@angular/router';
-
 import {
-    MatButtonModule, MatCardModule, MatFormFieldModule, MatIconModule, MatInputModule, MatListModule, MatMenuModule, MatRadioModule, MatSidenavModule, MatToolbarModule
+    MatButtonModule,
+    MatCardModule,
+    MatFormFieldModule,
+    MatIconModule,
+    MatInputModule,
+    MatListModule,
+    MatMenuModule,
+    MatRadioModule,
+    MatSidenavModule,
+    MatToolbarModule
 } from '@angular/material';
-
+import { RouterModule, Routes } from '@angular/router';
 import { FuseSharedModule } from '@fuse/shared.module';
-
-import { ChatService } from 'app/fuse/main/apps/chat/chat.service';
-import { ChatComponent } from 'app/fuse/main/apps/chat/chat.component';
 import { ChatStartComponent } from 'app/fuse/main/apps/chat/chat-start/chat-start.component';
 import { ChatViewComponent } from 'app/fuse/main/apps/chat/chat-view/chat-view.component';
+import { ChatComponent } from 'app/fuse/main/apps/chat/chat.component';
+import { ChatService } from 'app/fuse/main/apps/chat/chat.service';
 import { ChatChatsSidenavComponent } from 'app/fuse/main/apps/chat/sidenavs/left/chats/chats.component';
-import { ChatUserSidenavComponent } from 'app/fuse/main/apps/chat/sidenavs/left/user/user.component';
 import { ChatLeftSidenavComponent } from 'app/fuse/main/apps/chat/sidenavs/left/left.component';
-import { ChatRightSidenavComponent } from 'app/fuse/main/apps/chat/sidenavs/right/right.component';
-import { ChatContactSidenavComponent } from 'app/fuse/main/apps/chat/sidenavs/right/contact/contact.component';
+import { ChatUserSidenavComponent } from 'app/fuse/main/apps/chat/sidenavs/left/user/user.component';
 
 const routes: Routes = [
     {
@@ -35,13 +39,10 @@ const routes: Routes = [
         ChatStartComponent,
         ChatChatsSidenavComponent,
         ChatUserSidenavComponent,
-        ChatLeftSidenavComponent,
-        ChatRightSidenavComponent,
-        ChatContactSidenavComponent
+        ChatLeftSidenavComponent
     ],
-    imports     : [
+    imports: [
         RouterModule.forChild(routes),
-
         MatButtonModule,
         MatCardModule,
         MatFormFieldModule,
@@ -52,13 +53,8 @@ const routes: Routes = [
         MatRadioModule,
         MatSidenavModule,
         MatToolbarModule,
-
         FuseSharedModule
     ],
-    providers   : [
-        ChatService
-    ]
+    providers: [ChatService]
 })
-export class ChatModule
-{
-}
+export class ChatModule {}

@@ -1,18 +1,16 @@
 import { Component, OnDestroy, OnInit, ViewEncapsulation } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
+import { ChatService } from 'app/fuse/main/apps/chat/chat.service';
 import { Subject } from 'rxjs';
 import { debounceTime, distinctUntilChanged, takeUntil } from 'rxjs/operators';
 
-import { ChatService } from 'app/fuse/main/apps/chat/chat.service';
-
 @Component({
-    selector     : 'chat-user-sidenav',
-    templateUrl  : './user.component.html',
-    styleUrls    : ['./user.component.scss'],
+    selector: 'chat-user-sidenav',
+    templateUrl: './user.component.html',
+    styleUrls: ['./user.component.scss'],
     encapsulation: ViewEncapsulation.None
 })
-export class ChatUserSidenavComponent implements OnInit, OnDestroy
-{
+export class ChatUserSidenavComponent implements OnInit, OnDestroy {
     user: any;
     userForm: FormGroup;
 
@@ -24,10 +22,7 @@ export class ChatUserSidenavComponent implements OnInit, OnDestroy
      *
      * @param {ChatService} _chatService
      */
-    constructor(
-        private _chatService: ChatService
-    )
-    {
+    constructor(private _chatService: ChatService) {
         // Set the private defaults
         this._unsubscribeAll = new Subject();
     }
@@ -39,12 +34,11 @@ export class ChatUserSidenavComponent implements OnInit, OnDestroy
     /**
      * On init
      */
-    ngOnInit(): void
-    {
+    ngOnInit(): void {
         this.user = this._chatService.user;
 
         this.userForm = new FormGroup({
-            mood  : new FormControl(this.user.mood),
+            mood: new FormControl(this.user.mood),
             status: new FormControl(this.user.status)
         });
 
@@ -64,8 +58,7 @@ export class ChatUserSidenavComponent implements OnInit, OnDestroy
     /**
      * On destroy
      */
-    ngOnDestroy(): void
-    {
+    ngOnDestroy(): void {
         // Unsubscribe from all subscriptions
         this._unsubscribeAll.next();
         this._unsubscribeAll.complete();
@@ -80,9 +73,7 @@ export class ChatUserSidenavComponent implements OnInit, OnDestroy
      *
      * @param view
      */
-    changeLeftSidenavView(view): void
-    {
+    changeLeftSidenavView(view): void {
         this._chatService.onLeftSidenavViewChanged.next(view);
     }
-
 }

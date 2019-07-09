@@ -10,8 +10,13 @@
  * Do not edit the class manually.
  */
 
-export interface SocialLoginRequest {
-    accessToken?: string;
-    userId?: string;
-    expires?: number;
+export interface ImageData {
+    width?: number;
+    height?: number;
+    maxWidth?: number;
+    maxHeight?: number;
+    url?: string;
+    previewUrl?: string;
+    imageType?: number;
+    renderAsSticker?: boolean;
 }

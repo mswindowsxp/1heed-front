@@ -9,9 +9,16 @@
  * https://github.com/swagger-api/swagger-codegen.git
  * Do not edit the class manually.
  */
+import { Messages } from './messages';
+import { UserList } from './userList';
 
-export interface SocialLoginRequest {
-    accessToken?: string;
-    userId?: string;
-    expires?: number;
+export interface Conversation {
+    id?: string;
+    link?: string;
+    updatedTime?: string;
+    senders?: UserList;
+    unreadCount?: number;
+    messageCount?: number;
+    participants?: UserList;
+    messages?: Messages;
 }

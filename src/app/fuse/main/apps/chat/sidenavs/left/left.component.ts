@@ -1,20 +1,17 @@
 import { Component, OnDestroy, OnInit, ViewEncapsulation } from '@angular/core';
+import { fuseAnimations } from '@fuse/animations';
+import { ChatService } from 'app/fuse/main/apps/chat/chat.service';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 
-import { fuseAnimations } from '@fuse/animations';
-
-import { ChatService } from 'app/fuse/main/apps/chat/chat.service';
-
 @Component({
-    selector     : 'chat-left-sidenav',
-    templateUrl  : './left.component.html',
-    styleUrls    : ['./left.component.scss'],
+    selector: 'chat-left-sidenav',
+    templateUrl: './left.component.html',
+    styleUrls: ['./left.component.scss'],
     encapsulation: ViewEncapsulation.None,
-    animations   : fuseAnimations
+    animations: fuseAnimations
 })
-export class ChatLeftSidenavComponent implements OnInit, OnDestroy
-{
+export class ChatLeftSidenavComponent implements OnInit, OnDestroy {
     view: string;
 
     // Private
@@ -25,10 +22,7 @@ export class ChatLeftSidenavComponent implements OnInit, OnDestroy
      *
      * @param {ChatService} _chatService
      */
-    constructor(
-        private _chatService: ChatService
-    )
-    {
+    constructor(private _chatService: ChatService) {
         // Set the defaults
         this.view = 'chats';
 
@@ -43,20 +37,16 @@ export class ChatLeftSidenavComponent implements OnInit, OnDestroy
     /**
      * On init
      */
-    ngOnInit(): void
-    {
-        this._chatService.onLeftSidenavViewChanged
-            .pipe(takeUntil(this._unsubscribeAll))
-            .subscribe(view => {
-                this.view = view;
-            });
+    ngOnInit(): void {
+        this._chatService.onLeftSidenavViewChanged.pipe(takeUntil(this._unsubscribeAll)).subscribe(view => {
+            this.view = view;
+        });
     }
 
     /**
      * On destroy
      */
-    ngOnDestroy(): void
-    {
+    ngOnDestroy(): void {
         // Unsubscribe from all subscriptions
         this._unsubscribeAll.next();
         this._unsubscribeAll.complete();
