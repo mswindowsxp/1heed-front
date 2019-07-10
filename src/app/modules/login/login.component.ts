@@ -5,6 +5,7 @@ import { FuseConfigService } from '@fuse/services/config.service';
 import { FuseSplashScreenService } from '@fuse/services/splash-screen.service';
 import { Data } from 'app/shared/models';
 import { FacebookService } from 'app/shared/services/facebook.service';
+import { UserInformationService } from 'app/shared/services/user-information.service';
 import { forkJoin, Observable, Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { AuthenticationService, PageService } from '../../core/http';
@@ -46,7 +47,8 @@ export class LoginComponent implements OnInit {
         private readonly authenticateService: AuthenticationService,
         private readonly facebookService: FacebookService,
         private readonly splasScreen: FuseSplashScreenService,
-        private readonly pageService: PageService
+        private readonly pageService: PageService,
+        private readonly userInforService: UserInformationService
     ) {
         // Configure the layout
         this._fuseConfigService.config = {
@@ -176,10 +178,10 @@ export class LoginComponent implements OnInit {
                 .subscribe(
                     () => {
                         sessionStorage.setItem(AuthConst.PAGE_TOKEN, page.access_token);
+                        this.userInforService.setUserInformation(page.picture.data.url, page.name);
                         this.router.navigate(['/apps/chat']);
                     },
                     error => {
-                        console.log(error);
                         this.splasScreen.hide();
                     }
                 );
