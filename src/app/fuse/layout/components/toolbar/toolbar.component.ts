@@ -3,7 +3,7 @@ import { FuseSidebarService } from '@fuse/components/sidebar/sidebar.service';
 import { FuseConfigService } from '@fuse/services/config.service';
 import { TranslateService } from '@ngx-translate/core';
 import { navigation } from 'app/navigation/navigation';
-import { UserInfor, UserInformationService } from 'app/shared/services';
+import { ObjectInfor, UserInformationService } from 'app/shared/services';
 import * as _ from 'lodash';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
@@ -22,7 +22,7 @@ export class ToolbarComponent implements OnInit, OnDestroy {
     navigation: any;
     selectedLanguage: any;
     userStatusOptions: any[];
-    userInfor: UserInfor;
+    userInfor: ObjectInfor;
     // Private
     private _unsubscribeAll: Subject<any>;
 
@@ -85,7 +85,7 @@ export class ToolbarComponent implements OnInit, OnDestroy {
 
         // Set the private defaults
         this._unsubscribeAll = new Subject();
-        this.userInformationService.userInfor$.pipe(takeUntil(this._unsubscribeAll)).subscribe((data: UserInfor) => {
+        this.userInformationService.userInfor$.pipe(takeUntil(this._unsubscribeAll)).subscribe((data: ObjectInfor) => {
             this.userInfor = data;
         });
     }

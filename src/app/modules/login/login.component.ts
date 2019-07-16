@@ -8,7 +8,7 @@ import { FacebookService } from 'app/shared/services/facebook.service';
 import { UserInformationService } from 'app/shared/services/user-information.service';
 import { forkJoin, Observable, Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
-import { AuthenticationService, PageService } from '../../core/http';
+import { AuthenticationService, LoginResponse, PageService } from '../../core/http';
 import { AuthenticateService } from '../../shared/services/authenticate.service';
 import { environment } from './../../../environments/environment';
 import { AuthConst } from './../../shared/constants/auth.const';
@@ -134,7 +134,7 @@ export class LoginComponent implements OnInit {
         this.isLogin = false;
     }
 
-    getUserDataData(authResponse: AuthResponse): Observable<any> {
+    getUserDataData(authResponse: AuthResponse): Observable<LoginResponse> {
         return this.authenticateService.apiLoginFacebookPost({
             accessToken: authResponse.accessToken,
             userId: authResponse.userID,
@@ -142,7 +142,7 @@ export class LoginComponent implements OnInit {
         });
     }
 
-    getPagesManage(authResponse: AuthResponse): Observable<any> {
+    getPagesManage(authResponse: AuthResponse): Observable<[LoginResponse, any]> {
         return forkJoin(this.getUserDataData(authResponse), this.facebookService.apiFacebookPagesGet(authResponse.accessToken));
     }
 
@@ -155,18 +155,24 @@ export class LoginComponent implements OnInit {
             .pipe(takeUntil(this._unsubscribeAll))
             .subscribe(
                 data => {
-                    this.splasScreen.hide();
-                    this.isLogin = true;
-                    this.userInformation = data[0];
-                    this.widgets = data[1].data;
-                    this.authService.login();
-                    sessionStorage.setItem(AuthConst.TOKEN, data[0].token);
-                    sessionStorage.setItem(AuthConst.REFRESH_TOKEN, data[0].refreshToken);
+                    this.processForSpecifyData(data);
                 },
-                error => {
+                () => {
                     this.splasScreen.hide();
                 }
             );
+    }
+
+    private processForSpecifyData(data: any): void {
+        this.splasScreen.hide();
+        this.isLogin = true;
+        this.userInformation = data[0];
+        this.widgets = data[1].data;
+        this.userInforService.setUserInformation(this.userInformation);
+        this.userInforService.setListPage(this.widgets);
+        this.authService.login();
+        sessionStorage.setItem(AuthConst.TOKEN, data[0].token);
+        sessionStorage.setItem(AuthConst.REFRESH_TOKEN, data[0].refreshToken);
     }
 
     chosingPage(page: Data): void {
@@ -178,10 +184,10 @@ export class LoginComponent implements OnInit {
                 .subscribe(
                     () => {
                         sessionStorage.setItem(AuthConst.PAGE_TOKEN, page.access_token);
-                        this.userInforService.setUserInformation(page.picture.data.url, page.name);
+                        this.userInforService.setPageSeletedInfor({ avatarUrl: page.picture.data.url, name: page.name });
                         this.router.navigate(['/apps/chat']);
                     },
-                    error => {
+                    () => {
                         this.splasScreen.hide();
                     }
                 );
