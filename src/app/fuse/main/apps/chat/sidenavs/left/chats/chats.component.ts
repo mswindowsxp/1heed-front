@@ -4,7 +4,7 @@ import { fuseAnimations } from '@fuse/animations';
 import { FuseMatSidenavHelperService } from '@fuse/directives/fuse-mat-sidenav/fuse-mat-sidenav.service';
 import { ChatService } from 'app/fuse/main/apps/chat/chat.service';
 import { AuthConst } from 'app/shared/constants/auth.const';
-import { UserInfor, UserInformationService } from 'app/shared/services';
+import { ObjectInfor, UserInformationService } from 'app/shared/services';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { Conversation } from '../../../../../../../core/http';
@@ -59,7 +59,7 @@ export class ChatChatsSidenavComponent implements OnInit, OnDestroy {
      */
     ngOnInit(): void {
         this.user = this._chatService.user;
-        this.userInformationService.userInfor$.pipe(takeUntil(this._unsubscribeAll)).subscribe((userInfor: UserInfor) => {
+        this.userInformationService.pageSeleted$.pipe(takeUntil(this._unsubscribeAll)).subscribe((userInfor: ObjectInfor) => {
             this.user = {
                 ...this.user,
                 name: userInfor.name,

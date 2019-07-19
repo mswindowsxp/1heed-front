@@ -1,9 +1,10 @@
 import { Component, OnDestroy, OnInit, ViewEncapsulation } from '@angular/core';
+import { Router } from '@angular/router';
 import { FuseSidebarService } from '@fuse/components/sidebar/sidebar.service';
 import { FuseConfigService } from '@fuse/services/config.service';
 import { TranslateService } from '@ngx-translate/core';
 import { navigation } from 'app/navigation/navigation';
-import { ObjectInfor, UserInformationService } from 'app/shared/services';
+import { AuthenticateService, ObjectInfor, UserInformationService } from 'app/shared/services';
 import * as _ from 'lodash';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
@@ -23,6 +24,7 @@ export class ToolbarComponent implements OnInit, OnDestroy {
     selectedLanguage: any;
     userStatusOptions: any[];
     userInfor: ObjectInfor;
+    pages: any[];
     // Private
     private _unsubscribeAll: Subject<any>;
 
@@ -37,7 +39,9 @@ export class ToolbarComponent implements OnInit, OnDestroy {
         private _fuseConfigService: FuseConfigService,
         private _fuseSidebarService: FuseSidebarService,
         private _translateService: TranslateService,
-        private readonly userInformationService: UserInformationService
+        private readonly userInformationService: UserInformationService,
+        private readonly authService: AuthenticateService,
+        private readonly router: Router
     ) {
         // Set the defaults
         this.userStatusOptions = [
@@ -87,6 +91,9 @@ export class ToolbarComponent implements OnInit, OnDestroy {
         this._unsubscribeAll = new Subject();
         this.userInformationService.userInfor$.pipe(takeUntil(this._unsubscribeAll)).subscribe((data: ObjectInfor) => {
             this.userInfor = data;
+        });
+        this.userInformationService.pages$.pipe(takeUntil(this._unsubscribeAll)).subscribe((data: any[]) => {
+            this.pages = data;
         });
     }
 
@@ -152,5 +159,10 @@ export class ToolbarComponent implements OnInit, OnDestroy {
 
         // Use the selected language for translations
         this._translateService.use(lang.id);
+    }
+
+    logout(): void {
+        this.authService.logout();
+        this.router.navigate(['/login']);
     }
 }

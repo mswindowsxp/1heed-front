@@ -1,7 +1,7 @@
 import { Component, OnDestroy, OnInit, ViewEncapsulation } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { ChatService } from 'app/fuse/main/apps/chat/chat.service';
-import { UserInfor, UserInformationService } from 'app/shared/services';
+import { ObjectInfor, UserInformationService } from 'app/shared/services';
 import { Subject } from 'rxjs';
 import { debounceTime, distinctUntilChanged, takeUntil } from 'rxjs/operators';
 
@@ -26,7 +26,7 @@ export class ChatUserSidenavComponent implements OnInit, OnDestroy {
     constructor(private _chatService: ChatService, private readonly userInformationService: UserInformationService) {
         // Set the private defaults
         this._unsubscribeAll = new Subject();
-        this.userInformationService.userInfor$.pipe(takeUntil(this._unsubscribeAll)).subscribe((userInfor: UserInfor) => {
+        this.userInformationService.pageSeleted$.pipe(takeUntil(this._unsubscribeAll)).subscribe((userInfor: ObjectInfor) => {
             this.user.name = userInfor.name;
             this.user.avatar = userInfor.avatarUrl;
         });

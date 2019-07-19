@@ -80,7 +80,7 @@ export class LoginComponent implements OnInit {
      */
     ngOnInit(): void {
         this.token = sessionStorage.getItem(AuthConst.FB_TOKEN);
-        if (this.authService.isLogin() || this.token) {
+        if (this.token) {
             this.token = sessionStorage.getItem(AuthConst.FB_TOKEN);
             this.userID = sessionStorage.getItem(AuthConst.USER_ID);
             this.experiedIn = parseInt(sessionStorage.getItem(AuthConst.EXPERIED_TIME), 0);
@@ -127,10 +127,11 @@ export class LoginComponent implements OnInit {
             },
             { scope: 'email,manage_pages,pages_show_list,pages_messaging,public_profile' }
         );
+        this.authService.setFB(FB);
     }
 
     fbLogout(): void {
-        FB.logout();
+        this.authService.logout();
         this.isLogin = false;
     }
 
@@ -168,7 +169,7 @@ export class LoginComponent implements OnInit {
         this.isLogin = true;
         this.userInformation = data[0];
         this.widgets = data[1].data;
-        this.userInforService.setUserInformation(this.userInformation);
+        this.userInforService.setUserInformation({ name: this.userInformation.user.name, avatarUrl: this.userInformation.user.avatar });
         this.userInforService.setListPage(this.widgets);
         this.authService.login();
         sessionStorage.setItem(AuthConst.TOKEN, data[0].token);
