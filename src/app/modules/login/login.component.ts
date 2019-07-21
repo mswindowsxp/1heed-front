@@ -5,9 +5,10 @@ import { FuseConfigService } from '@fuse/services/config.service';
 import { FuseSplashScreenService } from '@fuse/services/splash-screen.service';
 import { Data } from 'app/shared/models';
 import { FacebookService } from 'app/shared/services/facebook.service';
+import { UserInformationService } from 'app/shared/services/user-information.service';
 import { forkJoin, Observable, Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
-import { AuthenticationService, PageService } from '../../core/http';
+import { AuthenticationService, LoginResponse, PageService } from '../../core/http';
 import { AuthenticateService } from '../../shared/services/authenticate.service';
 import { environment } from './../../../environments/environment';
 import { AuthConst } from './../../shared/constants/auth.const';
@@ -46,7 +47,8 @@ export class LoginComponent implements OnInit {
         private readonly authenticateService: AuthenticationService,
         private readonly facebookService: FacebookService,
         private readonly splasScreen: FuseSplashScreenService,
-        private readonly pageService: PageService
+        private readonly pageService: PageService,
+        private readonly userInforService: UserInformationService
     ) {
         // Configure the layout
         this._fuseConfigService.config = {
@@ -78,7 +80,7 @@ export class LoginComponent implements OnInit {
      */
     ngOnInit(): void {
         this.token = sessionStorage.getItem(AuthConst.FB_TOKEN);
-        if (this.authService.isLogin() || this.token) {
+        if (this.token) {
             this.token = sessionStorage.getItem(AuthConst.FB_TOKEN);
             this.userID = sessionStorage.getItem(AuthConst.USER_ID);
             this.experiedIn = parseInt(sessionStorage.getItem(AuthConst.EXPERIED_TIME), 0);
@@ -125,14 +127,15 @@ export class LoginComponent implements OnInit {
             },
             { scope: 'email,manage_pages,pages_show_list,pages_messaging,public_profile' }
         );
+        this.authService.setFB(FB);
     }
 
     fbLogout(): void {
-        FB.logout();
+        this.authService.logout();
         this.isLogin = false;
     }
 
-    getUserDataData(authResponse: AuthResponse): Observable<any> {
+    getUserDataData(authResponse: AuthResponse): Observable<LoginResponse> {
         return this.authenticateService.apiLoginFacebookPost({
             accessToken: authResponse.accessToken,
             userId: authResponse.userID,
@@ -140,7 +143,7 @@ export class LoginComponent implements OnInit {
         });
     }
 
-    getPagesManage(authResponse: AuthResponse): Observable<any> {
+    getPagesManage(authResponse: AuthResponse): Observable<[LoginResponse, any]> {
         return forkJoin(this.getUserDataData(authResponse), this.facebookService.apiFacebookPagesGet(authResponse.accessToken));
     }
 
@@ -153,18 +156,24 @@ export class LoginComponent implements OnInit {
             .pipe(takeUntil(this._unsubscribeAll))
             .subscribe(
                 data => {
-                    this.splasScreen.hide();
-                    this.isLogin = true;
-                    this.userInformation = data[0];
-                    this.widgets = data[1].data;
-                    this.authService.login();
-                    sessionStorage.setItem(AuthConst.TOKEN, data[0].token);
-                    sessionStorage.setItem(AuthConst.REFRESH_TOKEN, data[0].refreshToken);
+                    this.processForSpecifyData(data);
                 },
-                error => {
+                () => {
                     this.splasScreen.hide();
                 }
             );
+    }
+
+    private processForSpecifyData(data: any): void {
+        this.splasScreen.hide();
+        this.isLogin = true;
+        this.userInformation = data[0];
+        this.widgets = data[1].data;
+        this.userInforService.setUserInformation({ name: this.userInformation.user.name, avatarUrl: this.userInformation.user.avatar });
+        this.userInforService.setListPage(this.widgets);
+        this.authService.login();
+        sessionStorage.setItem(AuthConst.TOKEN, data[0].token);
+        sessionStorage.setItem(AuthConst.REFRESH_TOKEN, data[0].refreshToken);
     }
 
     chosingPage(page: Data): void {
@@ -176,10 +185,10 @@ export class LoginComponent implements OnInit {
                 .subscribe(
                     () => {
                         sessionStorage.setItem(AuthConst.PAGE_TOKEN, page.access_token);
+                        this.userInforService.setPageSeletedInfor({ avatarUrl: page.picture.data.url, name: page.name });
                         this.router.navigate(['/apps/chat']);
                     },
-                    error => {
-                        console.log(error);
+                    () => {
                         this.splasScreen.hide();
                     }
                 );

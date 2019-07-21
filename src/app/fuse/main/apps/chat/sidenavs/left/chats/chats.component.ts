@@ -4,6 +4,7 @@ import { fuseAnimations } from '@fuse/animations';
 import { FuseMatSidenavHelperService } from '@fuse/directives/fuse-mat-sidenav/fuse-mat-sidenav.service';
 import { ChatService } from 'app/fuse/main/apps/chat/chat.service';
 import { AuthConst } from 'app/shared/constants/auth.const';
+import { ObjectInfor, UserInformationService } from 'app/shared/services';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { Conversation } from '../../../../../../../core/http';
@@ -36,7 +37,8 @@ export class ChatChatsSidenavComponent implements OnInit, OnDestroy {
     constructor(
         private _chatService: ChatService,
         private _fuseMatSidenavHelperService: FuseMatSidenavHelperService,
-        public _observableMedia: ObservableMedia
+        public _observableMedia: ObservableMedia,
+        private readonly userInformationService: UserInformationService
     ) {
         // Set the defaults
         this.chatSearch = {
@@ -57,6 +59,13 @@ export class ChatChatsSidenavComponent implements OnInit, OnDestroy {
      */
     ngOnInit(): void {
         this.user = this._chatService.user;
+        this.userInformationService.pageSeleted$.pipe(takeUntil(this._unsubscribeAll)).subscribe((userInfor: ObjectInfor) => {
+            this.user = {
+                ...this.user,
+                name: userInfor.name,
+                avatar: userInfor.avatarUrl
+            };
+        });
         this.chats = this._chatService.chats.data;
         this.contacts = this._chatService.contacts;
         this.pageToken = sessionStorage.getItem(AuthConst.PAGE_TOKEN);
