@@ -1,6 +1,5 @@
 import { NgModule } from '@angular/core';
 import { FuseSharedModule } from '@fuse/shared.module';
-import { NavbarHorizontalStyle1Module } from 'app/fuse/layout/components/navbar/horizontal/style-1/style-1.module';
 import { NavbarComponent } from 'app/fuse/layout/components/navbar/navbar.component';
 import { NavbarVerticalStyle2Module } from 'app/fuse/layout/components/navbar/vertical/style-2/style-2.module';
 
@@ -12,7 +11,6 @@ import { NavbarVerticalStyle2Module } from 'app/fuse/layout/components/navbar/ve
     ],
     imports: [
         FuseSharedModule,
-        NavbarHorizontalStyle1Module,
         NavbarVerticalStyle2Module
     ],
     exports: [
