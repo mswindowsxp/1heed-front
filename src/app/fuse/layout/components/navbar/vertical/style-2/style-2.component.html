@@ -1,7 +1,7 @@
 <div class="navbar-header" [ngClass]="fuseConfig.layout.navbar.secondaryBackground">
     <div class="logo">
         <img class="logo-icon" src="assets/images/logos/fuse.svg" />
-        <span class="logo-text">1 HEED</span>
+        <span class="logo-text">1 HEEDaaa</span>
     </div>
 
     <button mat-icon-button class="toggle-sidebar-folded" (click)="toggleSidebarFolded()" fxHide.lt-lg>
@@ -13,11 +13,7 @@
     </button>
 </div>
 
-<div
-    class="navbar-content"
-    fusePerfectScrollbar
-    [fusePerfectScrollbarOptions]="{ suppressScrollX: true }"
-    [ngClass]="fuseConfig.layout.navbar.primaryBackground"
->
+<div class="navbar-content" fusePerfectScrollbar [fusePerfectScrollbarOptions]="{ suppressScrollX: true }"
+    [ngClass]="fuseConfig.layout.navbar.primaryBackground">
     <fuse-navigation layout="vertical"></fuse-navigation>
 </div>

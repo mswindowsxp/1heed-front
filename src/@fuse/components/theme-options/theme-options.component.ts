@@ -1,22 +1,21 @@
 import { Component, HostBinding, OnDestroy, OnInit, ViewEncapsulation } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
+import { fuseAnimations } from '@fuse/animations';
+import { FuseNavigationService } from '@fuse/components/navigation/navigation.service';
+import { FuseSidebarService } from '@fuse/components/sidebar/sidebar.service';
+import { FuseConfigService } from '@fuse/services/config.service';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 
-import { fuseAnimations } from '@fuse/animations';
-import { FuseConfigService } from '@fuse/services/config.service';
-import { FuseNavigationService } from '@fuse/components/navigation/navigation.service';
-import { FuseSidebarService } from '@fuse/components/sidebar/sidebar.service';
 
 @Component({
-    selector     : 'fuse-theme-options',
-    templateUrl  : './theme-options.component.html',
-    styleUrls    : ['./theme-options.component.scss'],
+    selector: 'fuse-theme-options',
+    templateUrl: './theme-options.component.html',
+    styleUrls: ['./theme-options.component.scss'],
     encapsulation: ViewEncapsulation.None,
-    animations   : fuseAnimations
+    animations: fuseAnimations
 })
-export class FuseThemeOptionsComponent implements OnInit, OnDestroy
-{
+export class FuseThemeOptionsComponent implements OnInit, OnDestroy {
     fuseConfig: any;
     form: FormGroup;
 
@@ -40,8 +39,7 @@ export class FuseThemeOptionsComponent implements OnInit, OnDestroy
         private _fuseConfigService: FuseConfigService,
         private _fuseNavigationService: FuseNavigationService,
         private _fuseSidebarService: FuseSidebarService
-    )
-    {
+    ) {
         // Set the defaults
         this.barClosed = true;
 
@@ -56,38 +54,37 @@ export class FuseThemeOptionsComponent implements OnInit, OnDestroy
     /**
      * On init
      */
-    ngOnInit(): void
-    {
+    ngOnInit(): void {
         // Build the config form
         // noinspection TypeScriptValidateTypes
         this.form = this._formBuilder.group({
-            colorTheme      : new FormControl(),
+            colorTheme: new FormControl(),
             customScrollbars: new FormControl(),
-            layout          : this._formBuilder.group({
-                style    : new FormControl(),
-                width    : new FormControl(),
-                navbar   : this._formBuilder.group({
-                    primaryBackground  : new FormControl(),
+            layout: this._formBuilder.group({
+                style: new FormControl(),
+                width: new FormControl(),
+                navbar: this._formBuilder.group({
+                    primaryBackground: new FormControl(),
                     secondaryBackground: new FormControl(),
-                    folded             : new FormControl(),
-                    hidden             : new FormControl(),
-                    position           : new FormControl(),
-                    variant            : new FormControl()
+                    folded: new FormControl(),
+                    hidden: new FormControl(),
+                    position: new FormControl(),
+                    variant: new FormControl()
                 }),
-                toolbar  : this._formBuilder.group({
-                    background           : new FormControl(),
+                toolbar: this._formBuilder.group({
+                    background: new FormControl(),
                     customBackgroundColor: new FormControl(),
-                    hidden               : new FormControl(),
-                    position             : new FormControl()
+                    hidden: new FormControl(),
+                    position: new FormControl()
                 }),
-                footer   : this._formBuilder.group({
-                    background           : new FormControl(),
+                footer: this._formBuilder.group({
+                    background: new FormControl(),
                     customBackgroundColor: new FormControl(),
-                    hidden               : new FormControl(),
-                    position             : new FormControl()
+                    hidden: new FormControl(),
+                    position: new FormControl()
                 }),
                 sidepanel: this._formBuilder.group({
-                    hidden  : new FormControl(),
+                    hidden: new FormControl(),
                     position: new FormControl()
                 })
             })
@@ -103,7 +100,7 @@ export class FuseThemeOptionsComponent implements OnInit, OnDestroy
 
                 // Set the config form values without emitting an event
                 // so that we don't end up with an infinite loop
-                this.form.setValue(config, {emitEvent: false});
+                this.form.setValue(config, { emitEvent: false });
             });
 
         // Subscribe to the specific form value changes (layout.style)
@@ -127,16 +124,16 @@ export class FuseThemeOptionsComponent implements OnInit, OnDestroy
 
         // Add customize nav item that opens the bar programmatically
         const customFunctionNavItem = {
-            'id'      : 'custom-function',
-            'title'   : 'Custom Function',
-            'type'    : 'group',
-            'icon'    : 'settings',
+            'id': 'custom-function',
+            'title': 'Custom Function',
+            'type': 'group',
+            'icon': 'settings',
             'children': [
                 {
-                    'id'      : 'customize',
-                    'title'   : 'Customize',
-                    'type'    : 'item',
-                    'icon'    : 'settings',
+                    'id': 'customize',
+                    'title': 'Customize',
+                    'type': 'item',
+                    'icon': 'settings',
                     'function': () => {
                         this.toggleSidebarOpen('themeOptionsPanel');
                     }
@@ -144,14 +141,13 @@ export class FuseThemeOptionsComponent implements OnInit, OnDestroy
             ]
         };
 
-        this._fuseNavigationService.addNavigationItem(customFunctionNavItem, 'end');
+        // this._fuseNavigationService.addNavigationItem(customFunctionNavItem, 'end');
     }
 
     /**
      * On destroy
      */
-    ngOnDestroy(): void
-    {
+    ngOnDestroy(): void {
         // Unsubscribe from all subscriptions
         this._unsubscribeAll.next();
         this._unsubscribeAll.complete();
@@ -171,45 +167,43 @@ export class FuseThemeOptionsComponent implements OnInit, OnDestroy
      * @param value
      * @private
      */
-    private _resetFormValues(value): void
-    {
-        switch ( value )
-        {
+    private _resetFormValues(value): void {
+        switch (value) {
             // Vertical Layout #1
             case 'vertical-layout-1':
-            {
-                this.form.patchValue({
-                    layout: {
-                        width    : 'fullwidth',
-                        navbar   : {
-                            primaryBackground  : 'fuse-navy-700',
-                            secondaryBackground: 'fuse-navy-900',
-                            folded             : true,
-                            hidden             : false,
-                            position           : 'left',
-                            variant            : 'vertical-style-2'
-                        },
-                        toolbar  : {
-                            background           : 'fuse-white-500',
-                            customBackgroundColor: false,
-                            hidden               : false,
-                            position             : 'below-static'
-                        },
-                        footer   : {
-                            background           : 'fuse-navy-900',
-                            customBackgroundColor: true,
-                            hidden               : true,
-                            position             : 'below-static'
-                        },
-                        sidepanel: {
-                            hidden  : false,
-                            position: 'right'
+                {
+                    this.form.patchValue({
+                        layout: {
+                            width: 'fullwidth',
+                            navbar: {
+                                primaryBackground: 'fuse-navy-700',
+                                secondaryBackground: 'fuse-navy-900',
+                                folded: true,
+                                hidden: false,
+                                position: 'left',
+                                variant: 'vertical-style-2'
+                            },
+                            toolbar: {
+                                background: 'fuse-white-500',
+                                customBackgroundColor: false,
+                                hidden: false,
+                                position: 'below-static'
+                            },
+                            footer: {
+                                background: 'fuse-navy-900',
+                                customBackgroundColor: true,
+                                hidden: true,
+                                position: 'below-static'
+                            },
+                            sidepanel: {
+                                hidden: false,
+                                position: 'right'
+                            }
                         }
-                    }
-                });
+                    });
 
-                break;
-            }
+                    break;
+                }
         }
     }
 
@@ -222,8 +216,7 @@ export class FuseThemeOptionsComponent implements OnInit, OnDestroy
      *
      * @param key
      */
-    toggleSidebarOpen(key): void
-    {
+    toggleSidebarOpen(key): void {
         this._fuseSidebarService.getSidebar(key).toggleOpen();
     }
 }
