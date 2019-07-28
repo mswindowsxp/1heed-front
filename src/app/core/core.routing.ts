@@ -9,19 +9,9 @@ const appRoutes: Routes = [
     },
     {
         path: 'apps',
-        loadChildren: '../fuse/main/apps/apps.module#AppsModule',
+        loadChildren: '../modules/main/apps/apps.module#AppsModule',
         canActivate: [AuthGuard]
     },
-    {
-        path: 'pages',
-        loadChildren: '../fuse/main/pages/pages.module#PagesModule',
-        canActivate: [AuthGuard]
-    },
-    {
-        path: 'documentation',
-        loadChildren: '../fuse/main/documentation/documentation.module#DocumentationModule'
-    },
-
     {
         path: 'login',
         loadChildren: '../modules/login/login.module#LoginModule'
@@ -32,4 +22,4 @@ const appRoutes: Routes = [
     }
 ];
 @NgModule({ imports: [RouterModule.forRoot(appRoutes)], exports: [RouterModule] })
-export class CoreRoutingModule {}
+export class CoreRoutingModule { }
