@@ -65,24 +65,24 @@ $typography: mat-typography-config($font-family: 'Muli, Helvetica Neue, Arial, s
 @import 'src/app/fuse/layout/components/chat-panel/chat-panel.theme';
 @import 'src/app/fuse/layout/components/toolbar/toolbar.theme';
 
-@import 'src/app/fuse/main/apps/calendar/calendar.theme';
-@import 'src/app/fuse/main/apps/chat/chat.theme';
-@import 'src/app/fuse/main/apps/contacts/contacts.theme';
-@import 'src/app/fuse/main/apps/dashboards/project/project.theme';
-@import 'src/app/fuse/main/apps/e-commerce/orders/orders.theme';
-@import 'src/app/fuse/main/apps/e-commerce/products/products.theme';
-@import 'src/app/fuse/main/apps/scrumboard/scrumboard.theme';
-@import 'src/app/fuse/main/apps/todo/todo.theme';
+@import 'src/app/modules/main/apps/calendar/calendar.theme';
+@import 'src/app/modules/main/apps/chat/chat.theme';
+@import 'src/app/modules/main/apps/contacts/contacts.theme';
+@import 'src/app/modules/main/apps/dashboards/project/project.theme';
+@import 'src/app/modules/main/apps/e-commerce/orders/orders.theme';
+@import 'src/app/modules/main/apps/e-commerce/products/products.theme';
+@import 'src/app/modules/main/apps/scrumboard/scrumboard.theme';
+@import 'src/app/modules/main/apps/todo/todo.theme';
 
 @import 'src/app/modules/login/login.theme';
-@import 'src/app/fuse/main/pages/authentication/mail-confirm/mail-confirm.theme';
-@import 'src/app/fuse/main/pages/coming-soon/coming-soon.theme';
-@import 'src/app/fuse/main/pages/errors/404/error-404.theme';
-@import 'src/app/fuse/main/pages/errors/500/error-500.theme';
-@import 'src/app/fuse/main/pages/maintenance/maintenance.theme';
-@import 'src/app/fuse/main/pages/search/classic/search-classic.theme';
-@import 'src/app/fuse/main/pages/search/modern/search-modern.theme';
-@import 'src/app/fuse/main/pages/knowledge-base/knowledge-base.theme';
+@import 'src/app/modules/main/pages/authentication/mail-confirm/mail-confirm.theme';
+@import 'src/app/modules/main/pages/coming-soon/coming-soon.theme';
+@import 'src/app/modules/main/pages/errors/404/error-404.theme';
+@import 'src/app/modules/main/pages/errors/500/error-500.theme';
+@import 'src/app/modules/main/pages/maintenance/maintenance.theme';
+@import 'src/app/modules/main/pages/search/classic/search-classic.theme';
+@import 'src/app/modules/main/pages/search/modern/search-modern.theme';
+@import 'src/app/modules/main/pages/knowledge-base/knowledge-base.theme';
 
 // Define a mixin for easier access
 @mixin components-theme($theme) {
