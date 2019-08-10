@@ -1,28 +1,30 @@
-import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { NgModule } from '@angular/core';
 import { FlexLayoutModule } from '@angular/flex-layout';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import {
-    MatButtonModule, MatCheckboxModule, MatDividerModule, MatFormFieldModule, MatIconModule, MatOptionModule, MatRadioModule, MatSelectModule, MatSlideToggleModule
+    MatButtonModule,
+    MatCheckboxModule,
+    MatDividerModule,
+    MatFormFieldModule,
+    MatIconModule,
+    MatOptionModule,
+    MatRadioModule,
+    MatSelectModule,
+    MatSlideToggleModule
 } from '@angular/material';
-
-import { FuseDirectivesModule } from '@fuse/directives/directives';
 import { FuseMaterialColorPickerModule } from '@fuse/components/material-color-picker/material-color-picker.module';
 import { FuseSidebarModule } from '@fuse/components/sidebar/sidebar.module';
-
 import { FuseThemeOptionsComponent } from '@fuse/components/theme-options/theme-options.component';
+import { FuseDirectivesModule } from '@fuse/directives/directives';
 
 @NgModule({
-    declarations: [
-        FuseThemeOptionsComponent
-    ],
-    imports     : [
+    declarations: [FuseThemeOptionsComponent],
+    imports: [
         CommonModule,
         FormsModule,
         ReactiveFormsModule,
-
         FlexLayoutModule,
-
         MatButtonModule,
         MatCheckboxModule,
         MatDividerModule,
@@ -32,15 +34,10 @@ import { FuseThemeOptionsComponent } from '@fuse/components/theme-options/theme-
         MatRadioModule,
         MatSelectModule,
         MatSlideToggleModule,
-
         FuseDirectivesModule,
         FuseMaterialColorPickerModule,
         FuseSidebarModule
     ],
-    exports     : [
-        FuseThemeOptionsComponent
-    ]
+    exports: [FuseThemeOptionsComponent]
 })
-export class FuseThemeOptionsModule
-{
-}
+export class FuseThemeOptionsModule {}

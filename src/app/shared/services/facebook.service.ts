@@ -1,7 +1,6 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs/Observable';
-
+import { Observable } from 'rxjs';
 import { Configuration } from '../../core/http/configuration';
 import { PageAccounts } from '../../core/http/model/pageAccounts';
 
@@ -33,26 +32,16 @@ export class FacebookService {
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public apiFacebookPagesGet(
-        authorization: string,
-        observe: any = 'body',
-        reportProgress: boolean = false
-    ): Observable<any> {
+    public apiFacebookPagesGet(authorization: string, observe: any = 'body', reportProgress: boolean = false): Observable<any> {
         if (authorization === null || authorization === undefined) {
-            throw new Error(
-                'Required parameter authorization was null or undefined when calling apiFacebookPagesGet.'
-            );
+            throw new Error('Required parameter authorization was null or undefined when calling apiFacebookPagesGet.');
         }
 
         let headers = this.defaultHeaders;
 
         // to determine the Accept header
         let httpHeaderAccepts: string[] = ['application/json'];
-        const httpHeaderAcceptSelected:
-            | string
-            | undefined = this.configuration.selectHeaderAccept(
-            httpHeaderAccepts
-        );
+        const httpHeaderAcceptSelected: string | undefined = this.configuration.selectHeaderAccept(httpHeaderAccepts);
         if (httpHeaderAcceptSelected != undefined) {
             headers = headers.set('Accept', httpHeaderAcceptSelected);
         }

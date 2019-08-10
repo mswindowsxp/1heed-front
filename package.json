@@ -43,7 +43,6 @@
         "@swimlane/ngx-dnd": "6.0.0",
         "@types/prismjs": "1.9.0",
         "angular-calendar": "0.26.4",
-        "angular-in-memory-web-api": "0.7.0",
         "chart.js": "2.7.3",
         "classlist.js": "1.1.20150312",
         "core-js": "2.5.7",
@@ -59,7 +58,6 @@
         "perfect-scrollbar": "1.4.0",
         "prismjs": "1.15.0",
         "rxjs": "6.3.3",
-        "rxjs-compat": "6.3.3",
         "web-animations-js": "2.3.1",
         "zone.js": "0.8.26"
     },
