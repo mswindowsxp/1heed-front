@@ -48,7 +48,7 @@ export class ChatService implements Resolve<any> {
      */
     resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<any> | Promise<any> | any {
         return new Promise((resolve, reject) => {
-            Promise.all([ this.getChats()]).then(([contacts, chats, user]) => {
+            Promise.all([this.getChats()]).then(([chats]) => {
                 this.chats = chats;
                 this.splashScreenService.hide();
                 resolve();
@@ -132,6 +132,7 @@ export class ChatService implements Resolve<any> {
      * @returns {Promise<any>}
      */
     getChats(): Promise<ConversationResponse> {
+        console.log("Running");
         return this.conversationService.apiConversationGet().toPromise();
     }
 

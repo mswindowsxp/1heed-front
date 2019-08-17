@@ -182,6 +182,7 @@ export class LoginComponent implements OnInit {
     }
 
     choosingPage(page: Data): void {
+        this.splashScreen.show();
         this.pageService
             .apiFacebookPagesPost({accessToken: page.access_token, avatar: page.picture.data.url, id: page.id, name: page.name})
             .pipe(takeUntil(this._unsubscribeAll))
