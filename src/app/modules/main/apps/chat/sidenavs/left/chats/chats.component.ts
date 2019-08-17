@@ -1,13 +1,13 @@
-import {Component, OnDestroy, OnInit, ViewEncapsulation} from '@angular/core';
-import {ObservableMedia} from '@angular/flex-layout';
-import {fuseAnimations} from '@fuse/animations';
-import {FuseMatSidenavHelperService} from '@fuse/directives/fuse-mat-sidenav/fuse-mat-sidenav.service';
-import {ChatService} from 'app/modules/main/apps/chat/chat.service';
-import {AuthConst} from 'app/shared/constants/auth.const';
-import {ObjectInfor, UserInformationService} from 'app/shared/services';
-import {Subject} from 'rxjs';
-import {takeUntil} from 'rxjs/operators';
-import {Conversation} from '../../../../../../../core/http';
+import { Component, OnDestroy, OnInit, ViewEncapsulation } from '@angular/core';
+import { ObservableMedia } from '@angular/flex-layout';
+import { fuseAnimations } from '@fuse/animations';
+import { FuseMatSidenavHelperService } from '@fuse/directives/fuse-mat-sidenav/fuse-mat-sidenav.service';
+import { ChatService } from 'app/modules/main/apps/chat/chat.service';
+import { AuthConst } from 'app/shared/constants/auth.const';
+import { ObjectInfor, UserInformationService } from 'app/shared/services';
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
+import { Conversation } from '../../../../../../../core/http';
 
 @Component({
     selector: 'chat-chats-sidenav',
@@ -71,7 +71,7 @@ export class ChatChatsSidenavComponent implements OnInit, OnDestroy {
             };
         });
         this.chats = this._chatService.chats.data;
-        this.pageToken = sessionStorage.getItem(AuthConst.PAGE_TOKEN);
+        this.pageToken = localStorage.getItem(AuthConst.PAGE_TOKEN);
     }
 
     /**

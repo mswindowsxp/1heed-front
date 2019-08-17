@@ -8,13 +8,13 @@ const appRoutes: Routes = [
         loadChildren: '../modules/auth/auth.module#AuthModule'
     },
     {
+        path: 'login',
+        loadChildren: '../modules/login/login.module#LoginModule'
+    },
+    {
         path: 'apps',
         loadChildren: '../modules/main/apps/apps.module#AppsModule',
         canActivate: [AuthGuard]
-    },
-    {
-        path: 'login',
-        loadChildren: '../modules/login/login.module#LoginModule'
     },
     {
         path: '**',
@@ -22,4 +22,4 @@ const appRoutes: Routes = [
     }
 ];
 @NgModule({ imports: [RouterModule.forRoot(appRoutes)], exports: [RouterModule] })
-export class CoreRoutingModule { }
+export class CoreRoutingModule {}

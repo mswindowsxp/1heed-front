@@ -110,12 +110,17 @@
             </div>
             <!-- / MESSAGE -->
         </div>
-        <!-- CHAT MESSAGES -->
     </div>
     <!-- / CHAT CONTENT -->
 
     <!-- CHAT FOOTER -->
     <div class="chat-footer" fxFlex="0 0 auto" fxLayout="column">
+        <!-- CHAT MESSAGES -->
+        <mat-chip-list aria-label="Message Tag Section">
+            <mat-chip *ngFor="let tag of availableTag" selected [color]="tag.color">
+                {{ tag.name }}
+            </mat-chip>
+        </mat-chip-list>
         <!-- REPLY FORM -->
         <div class="reply-form" fxFlex="0 0 auto" fxLayout="row" fxLayoutAlign="center center">
             <form

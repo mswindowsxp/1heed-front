@@ -3,6 +3,7 @@ import { NgForm } from '@angular/forms';
 import { FusePerfectScrollbarDirective } from '@fuse/directives/fuse-perfect-scrollbar/fuse-perfect-scrollbar.directive';
 import { ChatService } from 'app/modules/main/apps/chat/chat.service';
 import { AuthConst } from 'app/shared/constants/auth.const';
+import { TagMessage } from 'app/shared/models';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { Conversation, Message } from '../../../../../core/http';
@@ -34,6 +35,15 @@ export class ChatViewComponent implements OnInit, OnDestroy, AfterViewInit {
     // Private
     private _unsubscribeAll: Subject<any>;
 
+    availableTag: TagMessage[] = [
+        { name: 'Lọc Câu Hỏi', color: 'primary' },
+        { name: 'Lọc Kiểm Hàng', color: undefined },
+        { name: 'Lọc Mua Hàng', color: 'accent' },
+        { name: 'Lọc Trả Hàng', color: 'accent' },
+        { name: 'Lọc Đã Gửi', color: 'warn' },
+        { name: 'Lọc Hết Hàng', color: 'warn' },
+        { name: 'Lọc Chưa Gắn Thẻ', color: 'accent' }
+    ];
     /**
      * Constructor
      *
@@ -52,7 +62,7 @@ export class ChatViewComponent implements OnInit, OnDestroy, AfterViewInit {
      * On init
      */
     ngOnInit(): void {
-        this.pageToken = sessionStorage.getItem(AuthConst.PAGE_TOKEN);
+        this.pageToken = localStorage.getItem(AuthConst.PAGE_TOKEN);
         this.user = this._chatService.user;
         this._chatService.onChatSelected.pipe(takeUntil(this._unsubscribeAll)).subscribe((chatData: Conversation) => {
             if (chatData) {
@@ -98,9 +108,6 @@ export class ChatViewComponent implements OnInit, OnDestroy, AfterViewInit {
             ((this.dialog.messages.data[i + 1] && this.dialog.messages.data[i + 1].from.id !== message.from.id) ||
                 !this.dialog.messages.data[i + 1])
         );
-        // (this.dialog[i + 1] && this.dialog[i + 1].who !== this.contact.id) || !this.dialog[i + 1];
-
-        // return !this.dialog.messages.data[i - 1] || (this.dialog.messages.data[i - 1]. && );
     }
 
     /**
@@ -173,33 +180,9 @@ export class ChatViewComponent implements OnInit, OnDestroy, AfterViewInit {
     /**
      * Reply
      */
-    reply(event): void {
-        // event.preventDefault();
-        //
-        // if (!this.replyForm.form.value.message) {
-        //     return;
-        // }
-        //
-        // // Message
-        // const message = {
-        //     who: this.user.id,
-        //     message: this.replyForm.form.value.message,
-        //     time: new Date().toISOString()
-        // };
-        //
-        // // Add the message to the chat
-        // this.dialog.push(message);
-        //
-        // // Reset the reply form
-        // this.replyForm.reset();
-        //
-        // // Update the server
-        // this._chatService.updateDialog(this.selectedChat.chatId, this.dialog).then(response => {
-        //     this.readyToReply();
-        // });
-    }
+    reply(event): void {}
 
-    isImageEmbed(data: Message) {
+    isImageEmbed(data: Message): boolean {
         return (
             data &&
             data.shares &&
@@ -208,19 +191,19 @@ export class ChatViewComponent implements OnInit, OnDestroy, AfterViewInit {
             (data.shares.data[0].link.indexOf('.png') !== -1 || data.shares.data[0].link.indexOf('.jpg') !== -1)
         );
     }
-    isAttachment(data: Message) {
+    isAttachment(data: Message): boolean | any {
         return data && data.attachments && data.attachments.data[0];
     }
 
-    isImage(attachment: any) {
+    isImage(attachment: any): boolean {
         return attachment && attachment.mime_type.indexOf('image') !== -1;
     }
 
-    isFile(attachment: any) {
+    isFile(attachment: any): boolean {
         return attachment && attachment.mime_type.indexOf('image') === -1 && attachment.mime_type.indexOf('video') === -1;
     }
 
-    isVideoEmbed(attachment: any) {
+    isVideoEmbed(attachment: any): boolean {
         return attachment && attachment.mime_type.indexOf('video') !== -1;
     }
 }

@@ -1,10 +1,8 @@
-import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { ActivatedRouteSnapshot, Resolve, RouterStateSnapshot } from '@angular/router';
 import { FuseSplashScreenService } from '@fuse/services/splash-screen.service';
-import { FuseUtils } from '@fuse/utils';
 import { Conversation, ConversationResponse, ConversationService } from 'app/core/http';
-import {BehaviorSubject, Observable, of, Subject} from 'rxjs';
+import { BehaviorSubject, Observable, of, Subject } from 'rxjs';
 
 @Injectable()
 export class ChatService implements Resolve<any> {
@@ -21,15 +19,10 @@ export class ChatService implements Resolve<any> {
     /**
      * Constructor
      *
-     * @param {HttpClient} _httpClient
      * @param {ConversationService} conversationService
      * @param splashScreenService
      */
-    constructor(
-        private _httpClient: HttpClient,
-        private readonly conversationService: ConversationService,
-        private readonly splashScreenService: FuseSplashScreenService
-    ) {
+    constructor(private readonly conversationService: ConversationService, private readonly splashScreenService: FuseSplashScreenService) {
         // Set the defaults
         this.onChatSelected = new BehaviorSubject(null);
         this.onContactSelected = new BehaviorSubject(null);
@@ -66,7 +59,7 @@ export class ChatService implements Resolve<any> {
         const chatItem = this.chats.data.find(item => {
             return item.id === chatID;
         });
-            this.onChatSelected.next(chatItem);
+        this.onChatSelected.next(chatItem);
     }
 
     /**
@@ -102,9 +95,7 @@ export class ChatService implements Resolve<any> {
      *
      * @param userData
      */
-    updateUserData(userData): void {
-
-    }
+    updateUserData(userData): void {}
 
     /**
      * Update the chat dialog
@@ -132,7 +123,6 @@ export class ChatService implements Resolve<any> {
      * @returns {Promise<any>}
      */
     getChats(): Promise<ConversationResponse> {
-        console.log("Running");
         return this.conversationService.apiConversationGet().toPromise();
     }
 

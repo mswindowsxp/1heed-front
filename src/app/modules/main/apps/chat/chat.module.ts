@@ -1,5 +1,17 @@
 import { NgModule } from '@angular/core';
-import { MatButtonModule, MatCardModule, MatFormFieldModule, MatIconModule, MatInputModule, MatListModule, MatMenuModule, MatRadioModule, MatSidenavModule, MatToolbarModule } from '@angular/material';
+import {
+    MatButtonModule,
+    MatCardModule,
+    MatChipsModule,
+    MatFormFieldModule,
+    MatIconModule,
+    MatInputModule,
+    MatListModule,
+    MatMenuModule,
+    MatRadioModule,
+    MatSidenavModule,
+    MatToolbarModule
+} from '@angular/material';
 import { RouterModule, Routes } from '@angular/router';
 import { FuseSharedModule } from '@fuse/shared.module';
 import { ChatStartComponent } from 'app/modules/main/apps/chat/chat-start/chat-start.component';
@@ -42,8 +54,9 @@ const routes: Routes = [
         MatRadioModule,
         MatSidenavModule,
         MatToolbarModule,
-        FuseSharedModule
+        FuseSharedModule,
+        MatChipsModule
     ],
     providers: [ChatService]
 })
-export class ChatModule { }
+export class ChatModule {}

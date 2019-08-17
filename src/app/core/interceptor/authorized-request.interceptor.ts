@@ -8,7 +8,7 @@ export class AuthorizedRequestHttpInterceptor implements HttpInterceptor {
     constructor() {}
 
     intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
-        const tokenCurrent = sessionStorage.getItem(AuthConst.TOKEN);
+        const tokenCurrent = localStorage.getItem(AuthConst.TOKEN);
         if (tokenCurrent) {
             const authReq = req.clone({
                 setHeaders: {
