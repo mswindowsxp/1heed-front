@@ -228,7 +228,7 @@ export class ChatPanelComponent implements OnInit, AfterViewInit, OnDestroy
             this.selectedContact = contact;
 
             // Load the chat
-            this._chatPanelService.getChat(contact.id).then((chat) => {
+            this._chatPanelService.getChat(contact.id).subscribe((chat) => {
 
                 // Set the chat
                 this.chat = chat;
@@ -277,7 +277,7 @@ export class ChatPanelComponent implements OnInit, AfterViewInit, OnDestroy
         this._replyForm.reset();
 
         // Update the server
-        this._chatPanelService.updateChat(this.chat.id, this.chat.dialog).then(response => {
+        this._chatPanelService.updateChat(this.chat.id, this.chat.dialog).subscribe(response => {
 
             // Prepare the chat for the replies
             this._prepareChatForReplies();

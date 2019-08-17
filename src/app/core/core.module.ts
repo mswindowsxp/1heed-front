@@ -8,11 +8,9 @@ import { FuseProgressBarModule, FuseSidebarModule, FuseThemeOptionsModule } from
 import { FuseModule } from '@fuse/fuse.module';
 import { FuseSharedModule } from '@fuse/shared.module';
 import { TranslateModule } from '@ngx-translate/core';
-import { InMemoryWebApiModule } from 'angular-in-memory-web-api';
 import { apiConfigFactory } from 'app/configs/';
 import { ApiModule, BASE_PATH } from 'app/core/http';
 import { AppStoreModule } from 'app/core/store/store.module';
-import { FakeDbService } from 'app/fuse/fake-db/fake-db.service';
 import { fuseConfig } from 'app/fuse/fuse-config';
 import { LayoutModule } from 'app/fuse/layout/layout.module';
 import { ShareModule } from 'app/shared/share.module';
@@ -35,10 +33,6 @@ import { AuthorizedRequestHttpInterceptor } from './interceptor';
         FuseModule.forRoot(fuseConfig),
         FuseSidebarModule,
         FuseThemeOptionsModule,
-        InMemoryWebApiModule.forRoot(FakeDbService, {
-            delay: 0,
-            passThruUnknownUrl: true
-        }),
         MatMomentDateModule,
         MatButtonModule,
         FuseSharedModule,
@@ -62,7 +56,6 @@ import { AuthorizedRequestHttpInterceptor } from './interceptor';
         FuseModule,
         FuseSidebarModule,
         FuseThemeOptionsModule,
-        InMemoryWebApiModule,
         MatMomentDateModule,
         MatButtonModule,
         FuseSharedModule,

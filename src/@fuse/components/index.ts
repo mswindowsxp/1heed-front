@@ -9,4 +9,3 @@ export * from './shortcuts/shortcuts.module';
 export * from './sidebar/sidebar.module';
 export * from './theme-options/theme-options.module';
 export * from './widget/widget.module';
-

@@ -4,7 +4,7 @@ import { ActivatedRouteSnapshot, Resolve, RouterStateSnapshot } from '@angular/r
 import { FuseSplashScreenService } from '@fuse/services/splash-screen.service';
 import { FuseUtils } from '@fuse/utils';
 import { Conversation, ConversationResponse, ConversationService } from 'app/core/http';
-import { BehaviorSubject, Observable, Subject } from 'rxjs';
+import {BehaviorSubject, Observable, of, Subject} from 'rxjs';
 
 @Injectable()
 export class ChatService implements Resolve<any> {
@@ -23,6 +23,7 @@ export class ChatService implements Resolve<any> {
      *
      * @param {HttpClient} _httpClient
      * @param {ConversationService} conversationService
+     * @param splashScreenService
      */
     constructor(
         private _httpClient: HttpClient,
@@ -47,10 +48,8 @@ export class ChatService implements Resolve<any> {
      */
     resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<any> | Promise<any> | any {
         return new Promise((resolve, reject) => {
-            Promise.all([this.getContacts(), this.getChats(), this.getUser()]).then(([contacts, chats, user]) => {
-                this.contacts = contacts;
+            Promise.all([this.getChats()]).then(([chats]) => {
                 this.chats = chats;
-                this.user = user;
                 this.splashScreenService.hide();
                 resolve();
             }, reject);
@@ -63,22 +62,11 @@ export class ChatService implements Resolve<any> {
      * @param contactId
      * @returns {Promise<any>}
      */
-    getChat(chatID): Promise<any> {
+    getChat(chatID): void {
         const chatItem = this.chats.data.find(item => {
             return item.id === chatID;
         });
-
-        // Create new chat, if it's not created yet.
-        if (!chatItem) {
-            this.createNewChat(chatID).then(newChats => {
-                this.getChat(chatID);
-            });
-            return;
-        }
-
-        return new Promise(() => {
             this.onChatSelected.next(chatItem);
-        });
     }
 
     /**
@@ -87,42 +75,8 @@ export class ChatService implements Resolve<any> {
      * @param contactId
      * @returns {Promise<any>}
      */
-    createNewChat(contactId): Promise<any> {
-        return new Promise((resolve, reject) => {
-            const contact = this.contacts.find(item => {
-                return item.id === contactId;
-            });
-
-            const chatId = FuseUtils.generateGUID();
-
-            const chat = {
-                id: chatId,
-                dialog: []
-            };
-
-            const chatListItem = {
-                contactId: contactId,
-                id: chatId,
-                lastMessageTime: '2017-02-18T10:30:18.931Z',
-                name: contact.name,
-                unread: null
-            };
-
-            // Add new chat list item to the user's chat list
-            this.user.chatList.push(chatListItem);
-
-            // Post the created chat
-            this._httpClient.post('api/chat-chats', { ...chat }).subscribe((response: any) => {
-                // Post the new the user data
-                this._httpClient.post('api/chat-user/' + this.user.id, this.user).subscribe(newUserData => {
-                    // Update the user data from server
-                    this.getUser().then(updatedUser => {
-                        this.onUserUpdated.next(updatedUser);
-                        resolve(updatedUser);
-                    });
-                });
-            }, reject);
-        });
+    createNewChat(contactId): Observable<any> {
+        return of({});
     }
 
     /**
@@ -149,9 +103,7 @@ export class ChatService implements Resolve<any> {
      * @param userData
      */
     updateUserData(userData): void {
-        this._httpClient.post('api/chat-user/' + this.user.id, userData).subscribe((response: any) => {
-            this.user = userData;
-        });
+
     }
 
     /**
@@ -161,17 +113,8 @@ export class ChatService implements Resolve<any> {
      * @param dialog
      * @returns {Promise<any>}
      */
-    updateDialog(chatId, dialog): Promise<any> {
-        return new Promise((resolve, reject) => {
-            const newData = {
-                id: chatId,
-                dialog: dialog
-            };
-
-            this._httpClient.post('api/chat-chats/' + chatId, newData).subscribe(updatedChat => {
-                resolve(updatedChat);
-            }, reject);
-        });
+    updateDialog(chatId, dialog): Observable<any> {
+        return of({});
     }
 
     /**
@@ -179,12 +122,8 @@ export class ChatService implements Resolve<any> {
      *
      * @returns {Promise<any>}
      */
-    getContacts(): Promise<any> {
-        return new Promise((resolve, reject) => {
-            this._httpClient.get('api/chat-contacts').subscribe((response: any) => {
-                resolve(response);
-            }, reject);
-        });
+    getContacts(): Observable<any> {
+        return of({});
     }
 
     /**
@@ -193,6 +132,7 @@ export class ChatService implements Resolve<any> {
      * @returns {Promise<any>}
      */
     getChats(): Promise<ConversationResponse> {
+        console.log("Running");
         return this.conversationService.apiConversationGet().toPromise();
     }
 
@@ -201,11 +141,7 @@ export class ChatService implements Resolve<any> {
      *
      * @returns {Promise<any>}
      */
-    getUser(): Promise<any> {
-        return new Promise((resolve, reject) => {
-            this._httpClient.get('api/chat-user').subscribe((response: any) => {
-                resolve(response[0]);
-            }, reject);
-        });
+    getUser(): Observable<any> {
+        return of({});
     }
 }
