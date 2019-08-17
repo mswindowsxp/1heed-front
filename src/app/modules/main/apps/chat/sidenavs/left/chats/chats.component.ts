@@ -33,6 +33,7 @@ export class ChatChatsSidenavComponent implements OnInit, OnDestroy {
      * @param {ChatService} _chatService
      * @param {FuseMatSidenavHelperService} _fuseMatSidenavHelperService
      * @param {ObservableMedia} _observableMedia
+     * @param userInformationService
      */
     constructor(
         private _chatService: ChatService,

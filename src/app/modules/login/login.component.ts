@@ -1,20 +1,21 @@
-import { Component, NgZone, OnInit, ViewEncapsulation } from '@angular/core';
-import { Router } from '@angular/router';
-import { fuseAnimations } from '@fuse/animations';
-import { FuseConfigService } from '@fuse/services/config.service';
-import { FuseSplashScreenService } from '@fuse/services/splash-screen.service';
-import { Data } from 'app/shared/models';
-import { FacebookService } from 'app/shared/services/facebook.service';
-import { UserInformationService } from 'app/shared/services/user-information.service';
-import { forkJoin, Observable, Subject } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
-import { AuthenticationService, LoginResponse, PageService } from '../../core/http';
-import { AuthenticateService } from '../../shared/services/authenticate.service';
-import { environment } from './../../../environments/environment';
-import { AuthConst } from './../../shared/constants/auth.const';
-import { AuthResponse, FacebookResponse } from './../../shared/models/facebook-token';
+import {Component, NgZone, OnInit, ViewEncapsulation} from '@angular/core';
+import {Router} from '@angular/router';
+import {fuseAnimations} from '@fuse/animations';
+import {FuseConfigService} from '@fuse/services/config.service';
+import {FuseSplashScreenService} from '@fuse/services/splash-screen.service';
+import {Data} from 'app/shared/models';
+import {FacebookService} from 'app/shared/services/facebook.service';
+import {UserInformationService} from 'app/shared/services/user-information.service';
+import {forkJoin, Observable, Subject} from 'rxjs';
+import {takeUntil} from 'rxjs/operators';
+import {AuthenticationService, LoginResponse, PageService} from '../../core/http';
+import {AuthenticateService} from '../../shared/services/authenticate.service';
+import {environment} from './../../../environments/environment';
+import {AuthConst} from './../../shared/constants/auth.const';
+import {AuthResponse, FacebookResponse} from './../../shared/models/facebook-token';
 
 declare var FB: any;
+
 @Component({
     selector: 'login',
     templateUrl: './login.component.html',
@@ -30,6 +31,7 @@ export class LoginComponent implements OnInit {
     userID: string;
     experiedIn: number;
     private _unsubscribeAll: Subject<any>;
+
     /**
      *
      * @param _fuseConfigService
@@ -90,7 +92,7 @@ export class LoginComponent implements OnInit {
                 userID: this.userID
             });
         }
-        (window as any).fbAsyncInit = function(): void {
+        (window as any).fbAsyncInit = function (): void {
             FB.init({
                 appId: environment.fbAppId,
                 cookie: true,
@@ -100,9 +102,9 @@ export class LoginComponent implements OnInit {
             FB.AppEvents.logPageView();
         };
 
-        (function(d, s, id): void {
-            var js,
-                fjs: any = d.getElementsByTagName(s)[0];
+        (function (d, s, id): void {
+            let js = null;
+            const fjs: any = d.getElementsByTagName(s)[0];
             if (d.getElementById(id)) {
                 return;
             }
@@ -125,7 +127,7 @@ export class LoginComponent implements OnInit {
                     }
                 });
             },
-            { scope: 'email,manage_pages,pages_show_list,pages_messaging,public_profile' }
+            {scope: 'email,manage_pages,pages_show_list,pages_messaging,public_profile'}
         );
         this.authService.setFB(FB);
     }
@@ -169,7 +171,7 @@ export class LoginComponent implements OnInit {
         this.isLogin = true;
         this.userInformation = data[0];
         this.widgets = data[1].data;
-        this.userInforService.setUserInformation({ name: this.userInformation.user.name, avatarUrl: this.userInformation.user.avatar });
+        this.userInforService.setUserInformation({name: this.userInformation.user.name, avatarUrl: this.userInformation.user.avatar});
         this.userInforService.setListPage(this.widgets);
         this.authService.login();
         sessionStorage.setItem(AuthConst.TOKEN, data[0].token);
@@ -180,12 +182,12 @@ export class LoginComponent implements OnInit {
         this.splasScreen.show();
         if (this.authService.isLogin()) {
             this.pageService
-                .apiFacebookPagesPost({ accessToken: page.access_token, avatar: page.picture.data.url, id: page.id, name: page.name })
+                .apiFacebookPagesPost({accessToken: page.access_token, avatar: page.picture.data.url, id: page.id, name: page.name})
                 .pipe(takeUntil(this._unsubscribeAll))
                 .subscribe(
                     () => {
                         sessionStorage.setItem(AuthConst.PAGE_TOKEN, page.access_token);
-                        this.userInforService.setPageSeletedInfor({ avatarUrl: page.picture.data.url, name: page.name });
+                        this.userInforService.setPageSeletedInfor({avatarUrl: page.picture.data.url, name: page.name});
                         this.router.navigate(['/apps/chat']);
                     },
                     () => {
