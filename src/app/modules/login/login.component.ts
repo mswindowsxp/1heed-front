@@ -35,11 +35,14 @@ export class LoginComponent implements OnInit {
     /**
      *
      * @param _fuseConfigService
-     * @param _formBuilder
      * @param authService
      * @param router
      * @param ngZone
      * @param authenticateService
+     * @param facebookService
+     * @param splashScreen
+     * @param pageService
+     * @param userInfoService
      */
     constructor(
         private _fuseConfigService: FuseConfigService,
@@ -48,9 +51,9 @@ export class LoginComponent implements OnInit {
         private readonly ngZone: NgZone,
         private readonly authenticateService: AuthenticationService,
         private readonly facebookService: FacebookService,
-        private readonly splasScreen: FuseSplashScreenService,
+        private readonly splashScreen: FuseSplashScreenService,
         private readonly pageService: PageService,
-        private readonly userInforService: UserInformationService
+        private readonly userInfoService: UserInformationService
     ) {
         // Configure the layout
         this._fuseConfigService.config = {
@@ -86,6 +89,7 @@ export class LoginComponent implements OnInit {
             this.token = sessionStorage.getItem(AuthConst.FB_TOKEN);
             this.userID = sessionStorage.getItem(AuthConst.USER_ID);
             this.experiedIn = parseInt(sessionStorage.getItem(AuthConst.EXPERIED_TIME), 0);
+            this.splashScreen.show();
             this.prepareData({
                 expiresIn: this.experiedIn,
                 accessToken: this.token,
@@ -116,7 +120,7 @@ export class LoginComponent implements OnInit {
     }
 
     fbLogin(): void {
-        this.splasScreen.show();
+        this.splashScreen.show();
         FB.login(
             (response: FacebookResponse) => {
                 this.ngZone.run(() => {
@@ -150,7 +154,6 @@ export class LoginComponent implements OnInit {
     }
 
     prepareData(authResponse: AuthResponse): void {
-        this.splasScreen.show();
         sessionStorage.setItem(AuthConst.FB_TOKEN, authResponse.accessToken);
         sessionStorage.setItem(AuthConst.USER_ID, authResponse.userID);
         sessionStorage.setItem(AuthConst.EXPERIED_TIME, authResponse.expiresIn.toString());
@@ -161,41 +164,37 @@ export class LoginComponent implements OnInit {
                     this.processForSpecifyData(data);
                 },
                 () => {
-                    this.splasScreen.hide();
+                    this.splashScreen.hide();
                 }
             );
     }
 
     private processForSpecifyData(data: any): void {
-        this.splasScreen.hide();
         this.isLogin = true;
         this.userInformation = data[0];
         this.widgets = data[1].data;
-        this.userInforService.setUserInformation({name: this.userInformation.user.name, avatarUrl: this.userInformation.user.avatar});
-        this.userInforService.setListPage(this.widgets);
+        this.userInfoService.setUserInformation({name: this.userInformation.user.name, avatarUrl: this.userInformation.user.avatar});
+        this.userInfoService.setListPage(this.widgets);
         this.authService.login();
         sessionStorage.setItem(AuthConst.TOKEN, data[0].token);
         sessionStorage.setItem(AuthConst.REFRESH_TOKEN, data[0].refreshToken);
+        this.splashScreen.hide();
     }
 
-    chosingPage(page: Data): void {
-        this.splasScreen.show();
-        if (this.authService.isLogin()) {
-            this.pageService
-                .apiFacebookPagesPost({accessToken: page.access_token, avatar: page.picture.data.url, id: page.id, name: page.name})
-                .pipe(takeUntil(this._unsubscribeAll))
-                .subscribe(
-                    () => {
-                        sessionStorage.setItem(AuthConst.PAGE_TOKEN, page.access_token);
-                        this.userInforService.setPageSeletedInfor({avatarUrl: page.picture.data.url, name: page.name});
-                        this.router.navigate(['/apps/chat']);
-                    },
-                    () => {
-                        this.splasScreen.hide();
-                    }
-                );
-        } else {
-            this.splasScreen.hide();
-        }
+    choosingPage(page: Data): void {
+        this.pageService
+            .apiFacebookPagesPost({accessToken: page.access_token, avatar: page.picture.data.url, id: page.id, name: page.name})
+            .pipe(takeUntil(this._unsubscribeAll))
+            .subscribe(
+                () => {
+                    sessionStorage.setItem(AuthConst.PAGE_TOKEN, page.access_token);
+                    this.userInfoService.setPageSeletedInfor({avatarUrl: page.picture.data.url, name: page.name});
+                    this.router.navigate(['/apps/chat']);
+                },
+                () => {
+                    this.splashScreen.hide();
+                }
+            );
+
     }
 }
