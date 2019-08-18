@@ -3,6 +3,7 @@ import { NgForm } from '@angular/forms';
 import { FusePerfectScrollbarDirective } from '@fuse/directives/fuse-perfect-scrollbar/fuse-perfect-scrollbar.directive';
 import { ChatService } from 'app/modules/main/apps/chat/chat.service';
 import { AuthConst } from 'app/shared/constants/auth.const';
+import { TagEnum } from 'app/shared/constants/tag-code.enum';
 import { TagMessage } from 'app/shared/models';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
@@ -36,13 +37,13 @@ export class ChatViewComponent implements OnInit, OnDestroy, AfterViewInit {
     private _unsubscribeAll: Subject<any>;
 
     availableTag: TagMessage[] = [
-        { name: 'Lọc Câu Hỏi', color: 'primary' },
-        { name: 'Lọc Kiểm Hàng', color: undefined },
-        { name: 'Lọc Mua Hàng', color: 'accent' },
-        { name: 'Lọc Trả Hàng', color: 'accent' },
-        { name: 'Lọc Đã Gửi', color: 'warn' },
-        { name: 'Lọc Hết Hàng', color: 'warn' },
-        { name: 'Lọc Chưa Gắn Thẻ', color: 'accent' }
+        { name: 'Lọc Câu Hỏi', color: 'primary', tagCode: TagEnum.QUESTION },
+        { name: 'Lọc Kiểm Hàng', color: undefined, tagCode: TagEnum.CHECK_REPO },
+        { name: 'Lọc Mua Hàng', color: 'accent', tagCode: TagEnum.BUY_PRODUCT },
+        { name: 'Lọc Trả Hàng', color: 'accent', tagCode: TagEnum.SEND_PRODUCT },
+        { name: 'Lọc Đã Gửi', color: 'warn', tagCode: TagEnum.SENT_PRODUCT },
+        { name: 'Lọc Hết Hàng', color: 'warn', tagCode: TagEnum.SOLD_OUT },
+        { name: 'Lọc Chưa Gắn Thẻ', color: 'accent', tagCode: TagEnum.UN_TAG }
     ];
     /**
      * Constructor
@@ -205,5 +206,9 @@ export class ChatViewComponent implements OnInit, OnDestroy, AfterViewInit {
 
     isVideoEmbed(attachment: any): boolean {
         return attachment && attachment.mime_type.indexOf('video') !== -1;
+    }
+
+    tagConvesation(tag: TagMessage) {
+        console.log(tag);
     }
 }

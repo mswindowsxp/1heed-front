@@ -117,7 +117,7 @@
     <div class="chat-footer" fxFlex="0 0 auto" fxLayout="column">
         <!-- CHAT MESSAGES -->
         <mat-chip-list aria-label="Message Tag Section">
-            <mat-chip *ngFor="let tag of availableTag" selected [color]="tag.color">
+            <mat-chip *ngFor="let tag of availableTag" selected [color]="tag.color" (click)="tagConvesation(tag)">
                 {{ tag.name }}
             </mat-chip>
         </mat-chip-list>

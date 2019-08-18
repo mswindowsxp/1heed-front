@@ -1,0 +1,9 @@
+export enum TagEnum {
+    QUESTION = 'QUESTION',
+    CHECK_REPO = 'CHECK_REPO',
+    BUY_PRODUCT = 'BUY_PRODUCT',
+    SEND_PRODUCT = 'SEND_PRODUCT',
+    SENT_PRODUCT = 'SENT_PROD',
+    SOLD_OUT = 'SOLD_OUT',
+    UN_TAG = 'UN_TAGs'
+}
