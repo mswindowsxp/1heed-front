@@ -1,6 +1,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { FuseConfigService } from '@fuse/services/config.service';
+import { FuseSplashScreenService } from '@fuse/services/splash-screen.service';
 import { AuthenticationService } from 'app/core/http/api/api';
 import { AuthConst } from 'app/shared/constants/auth.const';
 import { Subject } from 'rxjs';
@@ -19,7 +20,8 @@ export class AuthComponent implements OnInit, OnDestroy {
         private readonly authenticationService: AuthenticationService,
         private readonly _fuseConfigService: FuseConfigService,
         private readonly router: Router,
-        private readonly authSerice: AuthenticateService
+        private readonly authSerice: AuthenticateService,
+        private readonly splashScreenService: FuseSplashScreenService
     ) {
         // Configure the layout
         this._fuseConfigService.config = {
@@ -43,6 +45,7 @@ export class AuthComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit(): void {
+        this.splashScreenService.show();
         // Check token exist in local storage or not
         const token = localStorage.getItem(AuthConst.TOKEN);
         const refreshToken = localStorage.getItem(AuthConst.REFRESH_TOKEN);

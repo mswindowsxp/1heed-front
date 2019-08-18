@@ -89,14 +89,15 @@ export class LoginComponent implements OnInit {
             this.token = localStorage.getItem(AuthConst.FB_TOKEN);
             this.userID = localStorage.getItem(AuthConst.USER_ID);
             this.experiedIn = parseInt(localStorage.getItem(AuthConst.EXPERIED_TIME), 0);
-            this.splashScreen.show();
             this.prepareData({
                 expiresIn: this.experiedIn,
                 accessToken: this.token,
                 userID: this.userID
             });
+        } else {
+            this.splashScreen.hide();
         }
-        (window as any).fbAsyncInit = function(): void {
+        (window as any).fbAsyncInit = function (): void {
             FB.init({
                 appId: environment.fbAppId,
                 cookie: true,
@@ -106,7 +107,7 @@ export class LoginComponent implements OnInit {
             FB.AppEvents.logPageView();
         };
 
-        (function(d, s, id): void {
+        (function (d, s, id): void {
             let js = null;
             const fjs: any = d.getElementsByTagName(s)[0];
             if (d.getElementById(id)) {
@@ -128,6 +129,7 @@ export class LoginComponent implements OnInit {
                         this.prepareData(response.authResponse);
                     } else {
                         this.isLogin = true;
+                        this.splashScreen.hide();
                     }
                 });
             },
@@ -154,6 +156,7 @@ export class LoginComponent implements OnInit {
     }
 
     prepareData(authResponse: AuthResponse): void {
+        console.log("Running");
         localStorage.setItem(AuthConst.FB_TOKEN, authResponse.accessToken);
         localStorage.setItem(AuthConst.USER_ID, authResponse.userID);
         localStorage.setItem(AuthConst.EXPERIED_TIME, authResponse.expiresIn.toString());
