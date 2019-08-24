@@ -1,12 +1,9 @@
 import { Injectable } from '@angular/core';
-import { Router } from '@angular/router';
 
 @Injectable({ providedIn: 'root' })
 export class AuthenticateService {
     public isLoggedIn: boolean;
     FB: any;
-    constructor(private readonly router: Router) {}
-
     // store the URL so we can redirect after logging in
 
     login(): void {
@@ -21,7 +18,7 @@ export class AuthenticateService {
         if (this.FB) {
             this.FB.logout();
         }
-        sessionStorage.clear();
+        localStorage.clear();
         this.isLoggedIn = false;
     }
 

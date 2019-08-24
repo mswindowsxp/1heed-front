@@ -1,5 +1,5 @@
 import { NgModule } from '@angular/core';
-import { MatButtonModule, MatCardModule, MatFormFieldModule, MatIconModule, MatInputModule, MatListModule, MatMenuModule, MatRadioModule, MatSidenavModule, MatToolbarModule } from '@angular/material';
+import { MatButtonModule, MatCardModule, MatChipsModule, MatFormFieldModule, MatIconModule, MatInputModule, MatListModule, MatMenuModule, MatRadioModule, MatSidenavModule, MatToolbarModule } from '@angular/material';
 import { RouterModule, Routes } from '@angular/router';
 import { FuseSharedModule } from '@fuse/shared.module';
 import { ChatStartComponent } from 'app/modules/main/apps/chat/chat-start/chat-start.component';
@@ -9,6 +9,7 @@ import { ChatService } from 'app/modules/main/apps/chat/chat.service';
 import { ChatChatsSidenavComponent } from 'app/modules/main/apps/chat/sidenavs/left/chats/chats.component';
 import { ChatLeftSidenavComponent } from 'app/modules/main/apps/chat/sidenavs/left/left.component';
 import { ChatUserSidenavComponent } from 'app/modules/main/apps/chat/sidenavs/left/user/user.component';
+import { ShareModule } from 'app/shared/share.module';
 
 const routes: Routes = [
     {
@@ -42,7 +43,9 @@ const routes: Routes = [
         MatRadioModule,
         MatSidenavModule,
         MatToolbarModule,
-        FuseSharedModule
+        FuseSharedModule,
+        MatChipsModule,
+        ShareModule
     ],
     providers: [ChatService]
 })

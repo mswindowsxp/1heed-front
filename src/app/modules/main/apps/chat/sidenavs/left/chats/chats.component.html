@@ -7,7 +7,8 @@
             <!-- USER AVATAR WRAPPER -->
             <div class="avatar-wrapper">
                 <!-- USER AVATAR -->
-                <img (click)="changeLeftSidenavView('user')" src="{{ user.avatar }}" class="mat-avatar avatar" alt="{{ user.name }}" />
+                <img (click)="changeLeftSidenavView('user')" src="{{ user.avatar }}" class="mat-avatar avatar"
+                    alt="{{ user.name }}" />
                 <!-- / USER AVATAR -->
 
                 <mat-icon class="s-16 status" [ngClass]="user.status" [matMenuTriggerFor]="userStatusMenu"></mat-icon>
@@ -89,32 +90,45 @@
                 Chats
             </div>
 
-            <button
-                mat-button
-                class="contact"
-                *ngFor="let chat of chats | filter: searchText"
-                (click)="getChat(chat.id)"
-                ngClass="{'unread':chat.unread_count}"
-                [@animate]="{ value: '*', params: { y: '100%' } }"
-            >
+            <button mat-button class="contact" *ngFor="let chat of chats | filter: searchText"
+                (click)="getChat(chat.id)" ngClass="{'unread':chat.unread_count}"
+                [@animate]="{ value: '*', params: { y: '100%' } }">
                 <div fxLayout="row" fxLayoutAlign="start center">
                     <div class="avatar-wrapper" fxFlex="0 1 auto" fxLayoutAlign="center center">
-                        <img class="avatar" [src]="'https://graph.facebook.com/' + chat.senders.data[0].id + '/picture?type=square&access_token=' + pageToken" alt="{{ chat.senders.data[0].name }}" />
+                        <img class="avatar"
+                            [src]="'https://graph.facebook.com/' + chat.senders.data[0].id + '/picture?type=square&access_token=' + pageToken"
+                            alt="{{ chat.senders.data[0].name }}" />
                         <!-- <img class="avatar" src="assets/images/avatars/alice.jpg" alt="{{ chat.senders.data[0].name }}" /> -->
-<!--                        <mat-icon class="s-16 status" [ngClass]="contacts | getById: chat.id:'status'"></mat-icon>-->
+                        <!--                        <mat-icon class="s-16 status" [ngClass]="contacts | getById: chat.id:'status'"></mat-icon>-->
                     </div>
 
                     <div fxLayout="row" fxFlex>
                         <div class="pr-4" fxFlex fxLayout="column" fxLayoutAlign="center start">
                             <div class="contact-name">{{ chat.senders.data[0].name }}</div>
-                            <div class="contact-last-message">{{ chat.messages.data[0].message }}</div>
+                            <div class="contact-last-message">{{ chat.messages.data[0].message | truncate:20 }}</div>
                         </div>
 
                         <div fxLayout="column" fxLayoutAlign="start end">
                             <div class="contact-last-message-time">
                                 {{ chat.messages.data[0].created_time | date }}
                             </div>
-                            <div *ngIf="chat.unread_count" class="mt-4 unread-message-count accent">{{ chat.unread_count }}</div>
+                            <div *ngIf="chat.unread_count" class="mt-4 unread-message-count accent">
+                                {{ chat.unread_count }}</div>
+                            <div *ngIf="!chat.unread_count" class="mt-4">
+                                <br>
+                            </div>
+                            <div fxLayout="row" fxLayoutAlign="start end">
+                                <div class="mt-4 unread-message-count accent">
+                                </div>
+                                <div class="mt-4 unread-message-count primary">
+                                </div>
+                                <div class="mt-4 unread-message-count warn">
+                                </div>
+                                <div class="mt-4 unread-message-count primary">
+                                </div>
+                                <div class="mt-4 unread-message-count warn">
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>

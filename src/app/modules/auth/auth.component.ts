@@ -1,12 +1,12 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { FuseConfigService } from '@fuse/services/config.service';
+import { FuseSplashScreenService } from '@fuse/services/splash-screen.service';
 import { AuthenticationService } from 'app/core/http/api/api';
 import { AuthConst } from 'app/shared/constants/auth.const';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { LoginResponse } from '../../core/http/model/loginResponse';
-import { FuseSplashScreenService } from './../../../@fuse/services/splash-screen.service';
 import { AuthenticateService } from './../../shared/services/authenticate.service';
 
 @Component({
@@ -14,20 +14,15 @@ import { AuthenticateService } from './../../shared/services/authenticate.servic
     templateUrl: './auth.component.html',
     styleUrls: ['./auth.component.scss']
 })
-export class AuthComponent implements OnInit {
+export class AuthComponent implements OnInit, OnDestroy {
     private _unsubscribeAll: Subject<any>;
     constructor(
         private readonly authenticationService: AuthenticationService,
         private readonly _fuseConfigService: FuseConfigService,
         private readonly router: Router,
-        private readonly splasScreen: FuseSplashScreenService,
-        private readonly authSerice: AuthenticateService
+        private readonly authSerice: AuthenticateService,
+        private readonly splashScreenService: FuseSplashScreenService
     ) {
-        // Set the private defaults
-        this._unsubscribeAll = new Subject();
-    }
-
-    ngOnInit(): void {
         // Configure the layout
         this._fuseConfigService.config = {
             layout: {
@@ -45,39 +40,64 @@ export class AuthComponent implements OnInit {
                 }
             }
         };
+        // Set the private defaults
+        this._unsubscribeAll = new Subject();
+    }
+
+    ngOnInit(): void {
+        this.splashScreenService.show();
         // Check token exist in local storage or not
-        const token = sessionStorage.getItem(AuthConst.TOKEN);
-        const refreshToken = sessionStorage.getItem(AuthConst.REFRESH_TOKEN);
+        const token = localStorage.getItem(AuthConst.TOKEN);
+        const refreshToken = localStorage.getItem(AuthConst.REFRESH_TOKEN);
         if (token) {
-            this.splasScreen.show();
             // Verify token
-            this.authenticationService.apiAuthVerifyTokenPost({ token: token }).pipe(takeUntil(this._unsubscribeAll)).subscribe(
-                data => {
-                    this.authSerice.login();
-                    this.router.navigate(['/login']);
-                },
-                error => {
-                    // Refresh token if token can not verify
-                    this.authenticationService
-                        .apiAuthRefreshTokenPost({
-                            refreshToken: refreshToken
-                        }).pipe(takeUntil(this._unsubscribeAll))
-                        .subscribe(
-                            (data: LoginResponse) => {
-                                sessionStorage.setItem(AuthConst.FB_TOKEN, data.token);
-                                sessionStorage.setItem(AuthConst.TOKEN, data.token);
-                                this.authSerice.login();
-                                this.router.navigate(['/login']);
-                            },
-                            error => {
-                                // navigate to login screen if can not refresh token
-                                this.router.navigate(['/login']);
-                            }
-                        );
-                }
-            );
+            this.authenticationService
+                .apiAuthVerifyTokenPost({ token: token })
+                .pipe(takeUntil(this._unsubscribeAll))
+                .subscribe(
+                    () => {
+                        this.authSerice.login();
+                        setTimeout(() => {
+                            this.router.navigate(['/login']);
+                        }, 0);
+                    },
+                    () => {
+                        // Refresh token if token can not verify
+                        this.authenticationService
+                            .apiAuthRefreshTokenPost({
+                                refreshToken: refreshToken
+                            })
+                            .pipe(takeUntil(this._unsubscribeAll))
+                            .subscribe(
+                                (data: LoginResponse) => {
+                                    localStorage.setItem(AuthConst.FB_TOKEN, data.token);
+                                    localStorage.setItem(AuthConst.TOKEN, data.token);
+                                    this.authSerice.login();
+                                    setTimeout(() => {
+                                        this.router.navigate(['/login']);
+                                    }, 0);
+                                },
+                                () => {
+                                    // navigate to login screen if can not refresh token
+                                    localStorage.clear();
+                                    setTimeout(() => {
+                                        this.router.navigate(['/login']);
+                                    }, 0);
+                                }
+                            );
+                    }
+                );
         } else {
-            this.router.navigate(['/login']);
+            setTimeout(() => {
+                this.router.navigate(['/login']);
+            }, 0);
+        }
+    }
+
+    ngOnDestroy(): void {
+        if (this._unsubscribeAll) {
+            this._unsubscribeAll.next();
+            this._unsubscribeAll.complete();
         }
     }
 }

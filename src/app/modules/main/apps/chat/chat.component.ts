@@ -1,5 +1,6 @@
 import { Component, OnDestroy, OnInit, ViewEncapsulation } from '@angular/core';
 import { fuseAnimations } from '@fuse/animations';
+import { FuseSplashScreenService } from '@fuse/services/splash-screen.service';
 import { ChatService } from 'app/modules/main/apps/chat/chat.service';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
@@ -22,7 +23,7 @@ export class ChatComponent implements OnInit, OnDestroy {
      *
      * @param {ChatService} _chatService
      */
-    constructor(private _chatService: ChatService) {
+    constructor(private _chatService: ChatService, private readonly splashScreenService: FuseSplashScreenService) {
         // Set the private defaults
         this._unsubscribeAll = new Subject();
     }
@@ -35,6 +36,7 @@ export class ChatComponent implements OnInit, OnDestroy {
      * On init
      */
     ngOnInit(): void {
+        // this.splashScreenService.hide();
         this._chatService.onChatSelected.pipe(takeUntil(this._unsubscribeAll)).subscribe(chatData => {
             this.selectedChat = chatData;
         });

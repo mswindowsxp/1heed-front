@@ -1,18 +1,18 @@
-import {Component, NgZone, OnInit, ViewEncapsulation} from '@angular/core';
-import {Router} from '@angular/router';
-import {fuseAnimations} from '@fuse/animations';
-import {FuseConfigService} from '@fuse/services/config.service';
-import {FuseSplashScreenService} from '@fuse/services/splash-screen.service';
-import {Data} from 'app/shared/models';
-import {FacebookService} from 'app/shared/services/facebook.service';
-import {UserInformationService} from 'app/shared/services/user-information.service';
-import {forkJoin, Observable, Subject} from 'rxjs';
-import {takeUntil} from 'rxjs/operators';
-import {AuthenticationService, LoginResponse, PageService} from '../../core/http';
-import {AuthenticateService} from '../../shared/services/authenticate.service';
-import {environment} from './../../../environments/environment';
-import {AuthConst} from './../../shared/constants/auth.const';
-import {AuthResponse, FacebookResponse} from './../../shared/models/facebook-token';
+import { Component, NgZone, OnInit, ViewEncapsulation } from '@angular/core';
+import { Router } from '@angular/router';
+import { fuseAnimations } from '@fuse/animations';
+import { FuseConfigService } from '@fuse/services/config.service';
+import { FuseSplashScreenService } from '@fuse/services/splash-screen.service';
+import { Data } from 'app/shared/models';
+import { FacebookService } from 'app/shared/services/facebook.service';
+import { UserInformationService } from 'app/shared/services/user-information.service';
+import { forkJoin, Observable, Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
+import { AuthenticationService, LoginResponse, PageService } from '../../core/http';
+import { AuthenticateService } from '../../shared/services/authenticate.service';
+import { environment } from './../../../environments/environment';
+import { AuthConst } from './../../shared/constants/auth.const';
+import { AuthResponse, FacebookResponse } from './../../shared/models/facebook-token';
 
 declare var FB: any;
 
@@ -84,17 +84,18 @@ export class LoginComponent implements OnInit {
      * On init
      */
     ngOnInit(): void {
-        this.token = sessionStorage.getItem(AuthConst.FB_TOKEN);
+        this.token = localStorage.getItem(AuthConst.FB_TOKEN);
         if (this.token) {
-            this.token = sessionStorage.getItem(AuthConst.FB_TOKEN);
-            this.userID = sessionStorage.getItem(AuthConst.USER_ID);
-            this.experiedIn = parseInt(sessionStorage.getItem(AuthConst.EXPERIED_TIME), 0);
-            this.splashScreen.show();
+            this.token = localStorage.getItem(AuthConst.FB_TOKEN);
+            this.userID = localStorage.getItem(AuthConst.USER_ID);
+            this.experiedIn = parseInt(localStorage.getItem(AuthConst.EXPERIED_TIME), 0);
             this.prepareData({
                 expiresIn: this.experiedIn,
                 accessToken: this.token,
                 userID: this.userID
             });
+        } else {
+            this.splashScreen.hide();
         }
         (window as any).fbAsyncInit = function (): void {
             FB.init({
@@ -128,10 +129,11 @@ export class LoginComponent implements OnInit {
                         this.prepareData(response.authResponse);
                     } else {
                         this.isLogin = true;
+                        this.splashScreen.hide();
                     }
                 });
             },
-            {scope: 'email,manage_pages,pages_show_list,pages_messaging,public_profile'}
+            { scope: 'email,manage_pages,pages_show_list,pages_messaging,public_profile' }
         );
         this.authService.setFB(FB);
     }
@@ -154,9 +156,10 @@ export class LoginComponent implements OnInit {
     }
 
     prepareData(authResponse: AuthResponse): void {
-        sessionStorage.setItem(AuthConst.FB_TOKEN, authResponse.accessToken);
-        sessionStorage.setItem(AuthConst.USER_ID, authResponse.userID);
-        sessionStorage.setItem(AuthConst.EXPERIED_TIME, authResponse.expiresIn.toString());
+        console.log("Running");
+        localStorage.setItem(AuthConst.FB_TOKEN, authResponse.accessToken);
+        localStorage.setItem(AuthConst.USER_ID, authResponse.userID);
+        localStorage.setItem(AuthConst.EXPERIED_TIME, authResponse.expiresIn.toString());
         this.getPagesManage(authResponse)
             .pipe(takeUntil(this._unsubscribeAll))
             .subscribe(
@@ -173,29 +176,28 @@ export class LoginComponent implements OnInit {
         this.isLogin = true;
         this.userInformation = data[0];
         this.widgets = data[1].data;
-        this.userInfoService.setUserInformation({name: this.userInformation.user.name, avatarUrl: this.userInformation.user.avatar});
+        this.userInfoService.setUserInformation({ name: this.userInformation.user.name, avatarUrl: this.userInformation.user.avatar });
         this.userInfoService.setListPage(this.widgets);
         this.authService.login();
-        sessionStorage.setItem(AuthConst.TOKEN, data[0].token);
-        sessionStorage.setItem(AuthConst.REFRESH_TOKEN, data[0].refreshToken);
+        localStorage.setItem(AuthConst.TOKEN, data[0].token);
+        localStorage.setItem(AuthConst.REFRESH_TOKEN, data[0].refreshToken);
         this.splashScreen.hide();
     }
 
     choosingPage(page: Data): void {
         this.splashScreen.show();
         this.pageService
-            .apiFacebookPagesPost({accessToken: page.access_token, avatar: page.picture.data.url, id: page.id, name: page.name})
+            .apiFacebookPagesPost({ accessToken: page.access_token, avatar: page.picture.data.url, id: page.id, name: page.name })
             .pipe(takeUntil(this._unsubscribeAll))
             .subscribe(
                 () => {
-                    sessionStorage.setItem(AuthConst.PAGE_TOKEN, page.access_token);
-                    this.userInfoService.setPageSeletedInfor({avatarUrl: page.picture.data.url, name: page.name});
+                    localStorage.setItem(AuthConst.PAGE_TOKEN, page.access_token);
+                    this.userInfoService.setPageSeletedInfor({ avatarUrl: page.picture.data.url, name: page.name });
                     this.router.navigate(['/apps/chat']);
                 },
                 () => {
                     this.splashScreen.hide();
                 }
             );
-
     }
 }
